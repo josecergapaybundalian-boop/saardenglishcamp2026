@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Topic Selector</title>
+<style>
+:root{--bg:#101827;--panel:#182438;--muted:#aab7ca;--red:#e53935;--gold:#ffd166;--green:#42d392}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;color:#f7f9fc;background:radial-gradient(circle at 50% 0%,#263b59 0,#101827 55%);display:flex;justify-content:center;padding:30px 16px}
+main{width:min(1100px,100%)}
+header{text-align:center;margin:8px 0 28px}
+h1{font-size:clamp(28px,5vw,44px);margin:0 0 9px;letter-spacing:.5px}
+header p{color:var(--muted);margin:0;font-size:16px}
+.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin:0 auto 30px}
+.topic{min-height:112px;border:2px solid #3a4b64;border-radius:16px;background:linear-gradient(145deg,#22334c,#182438);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px;position:relative;transition:transform .18s,border-color .18s,box-shadow .18s,background .18s;opacity:.7}
+.topic .number{font-size:12px;color:#9fb0c8;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+.topic{overflow:hidden;padding:0 0 12px;justify-content:flex-start}
+.topic-photo{width:100%;height:112px;object-fit:cover;display:block;margin-bottom:12px;background:#31445f}
+.topic .number,.topic .name{padding-left:10px;padding-right:10px}
+.topic .number{margin-bottom:7px}
+@media(max-width:720px){.topic-photo{height:125px}}
+
+.topic .name{font-size:17px;font-weight:700;line-height:1.25;overflow-wrap:anywhere}
+.topic.active{opacity:1;border-color:var(--gold);box-shadow:0 0 0 3px #ffd16633,0 0 24px #ffd166aa;transform:scale(1.035);background:linear-gradient(145deg,#594b27,#28334a)}
+.topic.selected{opacity:1;border-color:var(--green);box-shadow:0 0 0 3px #42d39233,0 0 25px #42d39277;background:linear-gradient(145deg,#174b43,#1b3442)}
+.topic.selected:after{content:"SELECTED";position:absolute;top:8px;right:9px;font-size:9px;letter-spacing:1px;color:#9af0c9;font-weight:bold}
+.controls{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;margin:18px 0}
+.big-button{width:156px;height:156px;border-radius:50%;border:8px solid #ff8a80;background:radial-gradient(circle at 35% 28%,#ff7771,#d71920 62%,#8e0d13);color:white;font-weight:900;font-size:22px;letter-spacing:1px;cursor:pointer;box-shadow:0 10px 0 #740b11,0 15px 28px #0008,inset 0 3px 9px #ffffff66;transition:transform .12s,filter .12s}
+.big-button:hover{filter:brightness(1.12)}
+.big-button:active{transform:translateY(7px);box-shadow:0 3px 0 #740b11,0 8px 16px #0008}
+.big-button:disabled{filter:grayscale(.5);cursor:not-allowed;opacity:.7}
+.status{text-align:center;min-width:250px}
+.status .label{color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:1.5px}
+#result{font-size:clamp(22px,4vw,30px);font-weight:800;color:var(--gold);margin-top:8px;min-height:36px}
+#message{color:var(--muted);font-size:14px;margin-top:8px}
+.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:18px 0}
+.small-btn{border:1px solid #52647e;border-radius:10px;background:#263750;color:#f5f7fb;padding:10px 15px;font-weight:700;cursor:pointer}
+.small-btn:hover{background:#344966}
+.instructions{text-align:center;color:var(--muted);font-size:13px;margin-top:25px}
+@media(max-width:720px){.board{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.topic{min-height:95px}.topic .name{font-size:15px}}
+@media(min-width:721px) and (max-width:900px){.board{grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.topic{min-height:100px;padding:9px}.topic .name{font-size:14px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<h1>🎯 Random Topic Selector</h1>
+<p>Press the big red button and let the light choose your topic!</p>
+</header>
+
+<section class="board" id="board" aria-label="Ten conversation situation boxes">
+<div class="topic" data-index="0" data-description="You meet a new classmate for the first time. Greet each other, introduce yourselves, and ask about hobbies and studies."><span class="number">Situation 01</span><span class="name">Meeting a New Classmate</span></div>
+<div class="topic" data-index="1" data-description="One student is a customer and the other is a waiter. Ask about the menu, order food and drinks, and request the bill."><span class="number">Situation 02</span><span class="name">Ordering Food at a Restaurant</span></div>
+<div class="topic" data-index="2" data-description="One student is a visitor who is lost. The other gives directions to a place nearby. Ask follow-up questions to check the route."><span class="number">Situation 03</span><span class="name">Asking for Directions</span></div>
+<div class="topic" data-index="3" data-description="One student is a customer and the other is a shop assistant. Ask about size, colour, price, and try-on options."><span class="number">Situation 04</span><span class="name">Shopping for Clothes</span></div>
+<div class="topic" data-index="4" data-description="One student is a patient and the other is a clinic receptionist. Explain the reason for the visit and arrange an appointment."><span class="number">Situation 05</span><span class="name">Making a Doctor's Appointment</span></div>
+<div class="topic" data-index="5" data-description="Two friends plan a weekend trip. Discuss where to go, how to travel, what to bring, and how much to spend."><span class="number">Situation 06</span><span class="name">Planning a Weekend Trip</span></div>
+<div class="topic" data-index="6" data-description="One student is a hotel guest and the other is a receptionist. Explain a problem with the room and ask for help."><span class="number">Situation 07</span><span class="name">A Problem at a Hotel</span></div>
+<div class="topic" data-index="7" data-description="One student does not understand an assignment. Ask a classmate or teacher to explain the instructions and deadline."><span class="number">Situation 08</span><span class="name">Asking for Help at School</span></div>
+<div class="topic" data-index="8" data-description="One student is an interviewer and the other is applying for a part-time job. Ask and answer questions about skills, experience, and availability."><span class="number">Situation 09</span><span class="name">A Job Interview</span></div>
+<div class="topic" data-index="9" data-description="One student is a customer and the other is a shop assistant. Explain what is wrong with a product and discuss an exchange or refund."><span class="number">Situation 10</span><span class="name">Returning a Faulty Product</span></div>
+</section>
+
+<section class="controls">
+<button class="big-button" id="startButton" type="button">PUSH<br>TO START</button>
+<div class="status">
+  <div class="label">Your selected topic</div>
+  <div id="result" aria-live="polite">Ready?</div>
+  <div id="message">The light will move around all 10 boxes.</div>
+  <div id="scenario" style="max-width:520px;margin:12px auto 0;color:#e4ebf5;line-height:1.5;font-size:14px"></div>
+</div>
+</section>
+<div class="actions">
+<button class="small-btn" id="resetButton" type="button">↻ Reset Selection</button>
+<button class="small-btn" id="editButton" type="button">✎ Edit Topic Names</button>
+</div>
+<p class="instructions">Each spin is random. The selected box will glow green and reveal a conversation situation. Students should role-play the situation together.</p>
+</main>
+<script>
+const boxes=[...document.querySelectorAll('.topic')];
+const topicPhotos = [
+  "https://images.unsplash.com/photo-1529390079861-591de354faf5?auto=format&fit=crop&w=700&q=80",
+  "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=700&q=80",
+  "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=700&q=80",
+  "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=700&q=80",
+  "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=700&q=80",
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=80",
+  "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=700&q=80",
+  "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=700&q=80",
+  "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=700&q=80",
+  "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=700&q=80"
+];
+// Add a topic-specific photo above each topic label.
+boxes.forEach((box, index) => {
+  const photo = document.createElement("img");
+  photo.className = "topic-photo";
+  photo.src = topicPhotos[index];
+  photo.alt = "Photo for " + box.querySelector(".name").textContent;
+  photo.loading = "lazy";
+  photo.onerror = () => { photo.style.display = "none"; };
+  box.prepend(photo);
+});
+
+// Short selection sounds are generated in the browser (no audio file needed).
+let soundContext = null;
+function playSelectionSound(finalSound = false, index = 0) {
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    if (!soundContext) soundContext = new AudioContextClass();
+    if (soundContext.state === "suspended") soundContext.resume();
+    const osc = soundContext.createOscillator();
+    const gain = soundContext.createGain();
+    const now = soundContext.currentTime;
+    osc.type = finalSound ? "sine" : "triangle";
+    osc.frequency.setValueAtTime(finalSound ? 880 : 420 + (index % 10) * 42, now);
+    if (finalSound) osc.frequency.exponentialRampToValueAtTime(1320, now + 0.18);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(finalSound ? 0.18 : 0.075, now + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + (finalSound ? 0.32 : 0.09));
+    osc.connect(gain);
+    gain.connect(soundContext.destination);
+    osc.start(now);
+    osc.stop(now + (finalSound ? 0.34 : 0.11));
+  } catch (error) {
+    // Keep the selector working if browser audio is unavailable.
+  }
+}
+
+const startButton=document.getElementById('startButton');
+const result=document.getElementById('result');
+const message=document.getElementById('message');
+const scenario=document.getElementById('scenario');
+const resetButton=document.getElementById('resetButton');
+const editButton=document.getElementById('editButton');
+let running=false, selectedIndex=-1, timer=null;
+
+function clearLights(){boxes.forEach(box=>box.classList.remove('active'));}
+function startSpin(){
+  if(running)return;
+  running=true; startButton.disabled=true; clearLights();
+  boxes.forEach(box=>box.classList.remove('selected'));
+  selectedIndex=-1;
+  result.textContent='Spinning...';
+  message.textContent='Watch the light travel around the boxes!';
+  const winner=Math.floor(Math.random()*boxes.length);
+  const currentStart=Math.floor(Math.random()*boxes.length);
+  const steps=boxes.length*3+((winner-currentStart+boxes.length)%boxes.length);
+  let step=0;
+  const tick=()=>{
+    clearLights();
+    const index=(currentStart+step)%boxes.length;
+    boxes[index].classList.add('active');
+    playSelectionSound(false, index);
+    if(step>=steps){
+      clearLights();
+      boxes[winner].classList.add('selected');
+      playSelectionSound(true, winner);
+      selectedIndex=winner;
+      const topicName=boxes[winner].querySelector('.name').textContent;
+      result.textContent=topicName;
+      message.textContent='This is your conversation situation!';
+      scenario.textContent=boxes[winner].dataset.description + ' Take turns speaking and try to continue the conversation for 1–2 minutes.';
+      running=false;startButton.disabled=false;
+      return;
+    }
+    step++;
+    const progress=step/steps;
+    const delay=90+Math.pow(progress,3)*260;
+    timer=setTimeout(tick,delay);
+  };
+  tick();
+}
+startButton.addEventListener('click',startSpin);
+resetButton.addEventListener('click',()=>{
+  if(running){clearTimeout(timer);running=false;startButton.disabled=false;}
+  clearLights();boxes.forEach(box=>box.classList.remove('selected'));
+  selectedIndex=-1;result.textContent='Ready?';message.textContent='The light will move around all 10 boxes.';scenario.textContent='';
+});
+editButton.addEventListener('click',()=>{
+  boxes.forEach((box,i)=>{
+    const current=box.querySelector('.name').textContent;
+    const updated=prompt('Enter the name for Topic '+(i+1)+':',current);
+    if(updated!==null && updated.trim())box.querySelector('.name').textContent=updated.trim();
+  });
+});
+</script>
+</body>
+</html>

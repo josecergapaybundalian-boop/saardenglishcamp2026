@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAARD PADERM WITTAYA SCHOOL | English Camp 2026</title>
+<style>
+:root{--navy:#102a56;--blue:#1769aa;--sky:#eaf6ff;--gold:#ffc928;--ink:#17243b;--muted:#60718b;--white:#fff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:linear-gradient(180deg,#eaf6ff 0,#f8fbff 48%,#eef5fc 100%);min-height:100vh}
+header{background:linear-gradient(120deg,#102a56,#1769aa 65%,#2387bd);color:white;padding:24px 18px 30px;border-bottom:6px solid var(--gold)}
+.header-inner{max-width:1180px;margin:auto;text-align:center}
+.school{font-size:clamp(15px,2vw,20px);font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#d8edff}
+h1{font-size:clamp(34px,6vw,66px);line-height:1.02;margin:12px 0 8px;font-weight:900;letter-spacing:1px;text-shadow:0 4px 0 #0b2145}
+.subtitle{font-size:clamp(14px,2vw,19px);color:#e7f4ff;letter-spacing:3px;font-weight:700}
+main{max-width:1180px;margin:0 auto;padding:26px 18px 50px}
+.poster-wrap{display:flex;justify-content:center;margin:0 auto 28px}
+.poster{width:min(100%,760px);max-height:410px;object-fit:contain;border-radius:22px;border:7px solid white;box-shadow:0 16px 36px #12345a2b;background:white}
+.intro{text-align:center;margin:0 auto 28px;max-width:780px}
+.intro h2{font-size:clamp(22px,3vw,30px);color:var(--navy);margin:0 0 8px}
+.intro p{color:var(--muted);font-size:16px;line-height:1.6;margin:0}
+.section-title{display:flex;align-items:center;gap:12px;margin:34px 0 16px;color:var(--navy);font-size:clamp(21px,3vw,28px)}
+.section-title:after{content:"";height:3px;background:#c9dff2;flex:1;border-radius:9px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.demo-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+.card{background:white;border:2px solid #d9e8f5;border-radius:20px;padding:20px;box-shadow:0 8px 22px #163b6410;display:flex;flex-direction:column;min-height:168px;transition:.2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 28px #163b6420;border-color:#8fc5ed}
+.card-top{display:flex;align-items:center;gap:13px;margin-bottom:12px}
+.icon{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:#e6f4ff;font-size:25px;flex:none}
+.card h3{margin:0;color:var(--navy);font-size:19px;line-height:1.25}
+.card p{margin:0 0 17px;color:var(--muted);font-size:14px;line-height:1.5;flex:1}
+a.open{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:var(--blue);color:white;font-weight:800;border-radius:11px;padding:11px 15px}
+a.open:hover{background:#0d4f8b}
+.demo .icon{background:#fff4cc}
+.demo a.open{background:#a45b12}
+.viewer{margin-top:30px;background:white;border:2px solid #cbdff0;border-radius:20px;overflow:hidden;box-shadow:0 12px 30px #163b6418}
+.viewer:fullscreen,.viewer:-webkit-full-screen{position:fixed;inset:0;width:100vw;height:100vh;max-width:none;max-height:none;margin:0;border:0;border-radius:0;box-shadow:none;display:flex;flex-direction:column;background:#fff}
+.viewer:fullscreen .viewer-head,.viewer:-webkit-full-screen .viewer-head{flex:0 0 auto}
+.viewer:fullscreen #activityFrame,.viewer:-webkit-full-screen #activityFrame{display:block;flex:1 1 auto;width:100%;height:100%;min-height:0;border:0}
+.viewer:fullscreen .viewer-empty,.viewer:-webkit-full-screen .viewer-empty{display:none!important}
+.viewer-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:13px 17px;background:#102a56;color:white}
+.viewer-head strong{font-size:16px}
+.viewer-actions{display:flex;gap:8px}
+.viewer-actions button,.viewer-actions a{border:0;border-radius:9px;padding:8px 12px;font-weight:700;text-decoration:none;cursor:pointer}
+.viewer-actions button{background:#e4f2ff;color:#102a56}
+.viewer-actions a{background:var(--gold);color:#17243b}
+iframe{display:block;width:100%;height: min(78vh,850px);min-height:560px;border:0;background:#f8fafc}
+.viewer-empty{padding:42px 20px;text-align:center;color:var(--muted)}
+footer{text-align:center;padding:22px;color:#dcecff;background:#102a56;font-size:13px}
+@media(max-width:800px){.cards{grid-template-columns:1fr}.demo-cards{grid-template-columns:1fr}.card{min-height:0}iframe{min-height:520px;height:72vh}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="school">SAARD PADERM WITTAYA SCHOOL · CHUMPHON</div>
+    <h1>ENGLISH CAMP 2026</h1>
+    <div class="subtitle">LEARN · PLAY · COMMUNICATE · HAVE FUN!</div>
+  </div>
+</header>
+<main>
+  <div class="poster-wrap">
+    <img class="poster" src="https://cdn.imageurl.net/i/21f29857-f76d-4691-9c1d-ad9208488b0c.jpg" alt="SAARD English Camp 2026 event photo">
+  </div>
+  <section class="intro">
+    <h2>Welcome to English Camp 2026!</h2>
+    <p>Explore the English activities and interactive demonstrations. Select an activity below to open it in the activity frame, or use the full-screen option for a larger view.</p>
+  </section>
+
+  <h2 class="section-title">🎯 English Activities</h2>
+  <section class="cards">
+    <article class="card">
+      <div class="card-top"><div class="icon">🎈</div><h3>ENGLISH ACTIVITY 1</h3></div>
+      <p>Pop the Balloon: Story Reveal</p>
+      <a class="open" href="activity-1.html" target="activityFrame" onclick="showViewer('ENGLISH ACTIVITY 1 · Pop the Balloon: Story Reveal','activity-1.html')">Open Activity ↗</a>
+    </article>
+    <article class="card">
+      <div class="card-top"><div class="icon">🦸</div><h3>ENGLISH ACTIVITY 2</h3></div>
+      <p>Superhero Vault: Explore superheroes, photos and catchphrases.</p>
+      <a class="open" href="activity-2.html" target="activityFrame" onclick="showViewer('ENGLISH ACTIVITY 2 · Superhero Vault','activity-2.html')">Open Activity ↗</a>
+    </article>
+    <article class="card">
+      <div class="card-top"><div class="icon">🎲</div><h3>ENGLISH ACTIVITY 3</h3></div>
+      <p>Random Topic Selector: Choose a conversation situation and role-play.</p>
+      <a class="open" href="activity-3.html" target="activityFrame" onclick="showViewer('ENGLISH ACTIVITY 3 · Random Topic Selector','activity-3.html')">Open Activity ↗</a>
+    </article>
+  </section>
+
+  <h2 class="section-title">🎬 English Activity Demonstration</h2>
+  <section class="demo-cards">
+    <article class="card demo">
+      <div class="card-top"><div class="icon">🎈</div><h3>SET 1 DEMO</h3></div>
+      <p>POP THE BALLOON STORY REVEAL</p>
+      <a class="open" href="demo-set-1.html" target="activityFrame" onclick="showViewer('SET 1 DEMO · Pop the Balloon Story Reveal','demo-set-1.html')">Open Demonstration ↗</a>
+    </article>
+    <article class="card demo">
+      <div class="card-top"><div class="icon">🦸</div><h3>SET 2 DEMO</h3></div>
+      <p>CREATE YOUR OWN SUPERHERO</p>
+      <a class="open" href="demo-set-2.html" target="activityFrame" onclick="showViewer('SET 2 DEMO · Create Your Own Superhero','demo-set-2.html')">Open Demonstration ↗</a>
+    </article>
+    <article class="card demo">
+      <div class="card-top"><div class="icon">💬</div><h3>SET 3 DEMO</h3></div>
+      <p>CONVERSATION CHALLENGE</p>
+      <a class="open" href="demo-set-3.html" target="activityFrame" onclick="showViewer('SET 3 DEMO · Conversation Challenge','demo-set-3.html')">Open Demonstration ↗</a>
+    </article>
+    <article class="card demo">
+      <div class="card-top"><div class="icon">🤝</div><h3>SET 4 DEMO</h3></div>
+      <p>TEAM BUILDING</p>
+      <a class="open" href="demo-set-4.html" target="activityFrame" onclick="showViewer('SET 4 DEMO · Team Building','demo-set-4.html')">Open Demonstration ↗</a>
+    </article>
+  </section>
+
+  <section class="viewer" id="viewer">
+    <div class="viewer-head">
+      <strong id="viewerTitle">Activity Frame · Select an activity above</strong>
+      <div class="viewer-actions">
+        <button type="button" onclick="document.getElementById('activityFrame').src='about:blank';document.getElementById('viewerTitle').textContent='Activity Frame · Select an activity above'">Close</button>
+        <a id="openNewTab" href="#" target="_blank" rel="noopener">Open in New Tab ↗</a>
+        <button type="button" onclick="openFullscreen()">Full Screen ⛶</button>
+      </div>
+    </div>
+    <div id="emptyMessage" class="viewer-empty">Your selected activity will appear here.</div>
+    <iframe id="activityFrame" name="activityFrame" title="English Camp activity frame" src="about:blank" onload="frameLoaded()"></iframe>
+  </section>
+</main>
+<footer>SAARD PADERM WITTAYA SCHOOL · CHUMPHON · ENGLISH CAMP 2026</footer>
+<script>
+const frame=document.getElementById('activityFrame');
+function showViewer(title,url){
+  document.getElementById('viewerTitle').textContent=title;
+  document.getElementById('openNewTab').href=url;
+  document.getElementById('emptyMessage').style.display='none';
+  document.getElementById('viewer').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function frameLoaded(){
+  if(frame.src && !frame.src.endsWith('about:blank')) document.getElementById('emptyMessage').style.display='none';
+}
+function openFullscreen(){
+  const viewer=document.getElementById('viewer');
+  if(viewer.requestFullscreen) viewer.requestFullscreen();
+  else if(viewer.webkitRequestFullscreen) viewer.webkitRequestFullscreen();
+  else if(frame.requestFullscreen) frame.requestFullscreen();
+}
+</script>
+</body>
+</html>

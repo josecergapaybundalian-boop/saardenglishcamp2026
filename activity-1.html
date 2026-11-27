@@ -1,0 +1,2255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pop the Balloon: Story Reveal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: radial-gradient(circle at 50% 20%, #f0f9ff 0%, #e0f2fe 45%, #fae8ff 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --s1: #f43f5e;
+            --s2: #f59e0b;
+            --s3: #10b981;
+            --s4: #3b82f6;
+            --s5: #8b5cf6;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100dvh;
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-dark);
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        h1, h2, h3, .font-display {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        #fxCanvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 40;
+        }
+
+        /* Single-screen mobile layout */
+        .app-shell {
+            width: 100%;
+            max-width: 560px;
+            height: 100dvh;
+            margin: 0 auto;
+            padding: 10px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .turn-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-bg);
+            padding: 6px 14px 6px 8px;
+            border-radius: 999px;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+            border: 2px solid #ffffff;
+        }
+
+        .turn-badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--s1);
+            color: #ffffff;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .turn-text-group {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+
+        .turn-student-name {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #0f172a;
+        }
+
+        .turn-counter {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Countdown Timer Pill */
+        .timer-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 0.98rem;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
+            border: 2px solid #ffffff;
+            min-width: 78px;
+            justify-content: center;
+            transition: background 0.2s ease, transform 0.15s ease;
+        }
+
+        .timer-pill.urgent {
+            background: #dc2626;
+            border-color: #fef08a;
+            animation: timerPulse 0.42s ease-in-out infinite alternate;
+        }
+
+        @keyframes timerPulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.12); }
+        }
+
+        .icon-btn {
+            background: var(--card-bg);
+            border: 2px solid #e2e8f0;
+            border-radius: 999px;
+            padding: 7px 11px;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 3px 8px rgba(15, 23, 42, 0.05);
+            transition: transform 0.1s ease;
+        }
+
+        .icon-btn:active {
+            transform: scale(0.94);
+        }
+
+        /* Compact Live Paragraph Strip */
+        .live-strip {
+            background: rgba(255, 255, 255, 0.88);
+            border: 2px solid #ffffff;
+            border-radius: 16px;
+            padding: 8px 12px;
+            margin-top: 8px;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+            flex-shrink: 0;
+            min-height: 46px;
+            max-height: 76px;
+            overflow-y: auto;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            font-size: 0.88rem;
+            font-weight: 800;
+            line-height: 1.3;
+        }
+
+        .live-strip-empty {
+            color: #94a3b8;
+            font-style: italic;
+            font-weight: 700;
+            width: 100%;
+            text-align: center;
+        }
+
+        .strip-chunk {
+            padding: 2px 6px;
+            border-radius: 7px;
+            animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Centerpiece Stage (Takes up ~50%+ of viewport height) */
+        .center-stage {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 0;
+            padding: 6px 0;
+        }
+
+        /* HUGE Floating Balloon */
+        .balloon-container {
+            height: 44dvh;
+            max-height: 350px;
+            min-height: 210px;
+            aspect-ratio: 220 / 285;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transform-origin: 50% 62%;
+            transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+            will-change: transform;
+        }
+
+        .balloon-bobber {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: floatBob 3.2s ease-in-out infinite;
+            transform-origin: 50% 62%;
+        }
+
+        @keyframes floatBob {
+            0%, 100% { transform: translateY(0px) rotate(-2deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        /* Tremble / shaking tension states as pressure rises */
+        .balloon-bobber.tense-1 {
+            animation: floatBob 2.2s ease-in-out infinite;
+        }
+
+        .balloon-bobber.tense-2 {
+            animation: tenseTrembleSoft 0.22s ease-in-out infinite;
+        }
+
+        .balloon-bobber.tense-3 {
+            animation: tenseTrembleHard 0.1s ease-in-out infinite;
+        }
+
+        @keyframes tenseTrembleSoft {
+            0%, 100% { transform: translate(0, 0) rotate(-1.5deg) scale(1.01, 0.99); }
+            50% { transform: translate(0, -3px) rotate(1.5deg) scale(0.99, 1.01); }
+        }
+
+        @keyframes tenseTrembleHard {
+            0% { transform: translate(-2.5px, -1px) rotate(-2.5deg) scale(1.03, 0.97); }
+            25% { transform: translate(2.5px, 1px) rotate(2deg) scale(0.97, 1.03); }
+            50% { transform: translate(-2px, 1.5px) rotate(-1.5deg) scale(1.02, 0.98); }
+            75% { transform: translate(2px, -1.5px) rotate(2.5deg) scale(0.98, 1.02); }
+            100% { transform: translate(-2.5px, -1px) rotate(-2.5deg) scale(1.03, 0.97); }
+        }
+
+        .balloon-bobber.pump-pulse {
+            animation: pumpExpand 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes pumpExpand {
+            0% { transform: scale(0.9, 0.94); }
+            55% { transform: scale(1.13, 1.07); }
+            100% { transform: scale(1, 1); }
+        }
+
+        .balloon-container.exploding {
+            animation: balloonExplode 0.24s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes balloonExplode {
+            0% { opacity: 1; }
+            45% { transform: scale(1.62, 1.55); opacity: 0.95; }
+            100% { transform: scale(0.15); opacity: 0; }
+        }
+
+        .balloon-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 18px 24px rgba(15, 23, 42, 0.2));
+            overflow: visible;
+            transition: filter 0.2s ease;
+        }
+
+        /* Air Pump Nozzle & Pressure Gauge HUD */
+        .pressure-hud {
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.92);
+            border: 2px solid #ffffff;
+            padding: 5px 12px;
+            border-radius: 999px;
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.1);
+            z-index: 5;
+            pointer-events: none;
+            transition: transform 0.15s ease;
+        }
+
+        .pressure-hud.bump {
+            transform: translateX(-50%) scale(1.1);
+        }
+
+        .nozzle-icon {
+            font-size: 1rem;
+            line-height: 1;
+            transition: transform 0.12s ease;
+        }
+
+        .pressure-hud.bump .nozzle-icon {
+            transform: translateY(-4px) scale(1.2);
+        }
+
+        .pressure-track {
+            width: 112px;
+            height: 11px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+
+        .pressure-fill {
+            height: 100%;
+            width: 8%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #38bdf8 0%, #22c55e 45%, #f59e0b 75%, #ef4444 100%);
+            transition: width 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .pressure-label {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #334155;
+            min-width: 54px;
+            text-align: right;
+        }
+
+        /* Animated Warning Clown Popup */
+        .clown-warning {
+            position: absolute;
+            right: -4px;
+            bottom: 34px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            z-index: 15;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateX(130%) rotate(14deg) scale(0.7);
+            transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.22s ease;
+        }
+
+        .clown-warning.active {
+            opacity: 1;
+            transform: translateX(0) rotate(0deg) scale(1);
+        }
+
+        .clown-speech {
+            background: #fef08a;
+            border: 3px solid #dc2626;
+            color: #991b1b;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 0.84rem;
+            line-height: 1.15;
+            padding: 8px 11px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(220, 38, 38, 0.28);
+            max-width: 168px;
+            text-align: center;
+            position: relative;
+            margin-bottom: 6px;
+            animation: speechShake 0.25s ease-in-out infinite alternate;
+        }
+
+        .clown-speech::after {
+            content: '';
+            position: absolute;
+            bottom: -9px;
+            right: 28px;
+            border-width: 9px 7px 0;
+            border-style: solid;
+            border-color: #dc2626 transparent transparent;
+        }
+
+        @keyframes speechShake {
+            0% { transform: rotate(-2.5deg) scale(0.98); }
+            100% { transform: rotate(2.5deg) scale(1.04); }
+        }
+
+        .clown-avatar {
+            width: 92px;
+            height: 92px;
+            filter: drop-shadow(0 8px 14px rgba(15, 23, 42, 0.24));
+            animation: clownBounce 0.28s ease-in-out infinite alternate;
+            transform-origin: bottom center;
+        }
+
+        @keyframes clownBounce {
+            0% { transform: translateY(0) rotate(-6deg); }
+            100% { transform: translateY(-9px) rotate(6deg); }
+        }
+
+        .clown-arm-wave {
+            transform-origin: 78px 66px;
+            animation: armWave 0.22s ease-in-out infinite alternate;
+        }
+
+        @keyframes armWave {
+            0% { transform: rotate(-22deg); }
+            100% { transform: rotate(24deg); }
+        }
+
+        /* Time's Up Retry Banner Overlay */
+        .timeout-banner {
+            position: absolute;
+            top: 44%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+            color: #ffffff;
+            border: 4px solid #fef08a;
+            border-radius: 24px;
+            padding: 14px 22px;
+            text-align: center;
+            box-shadow: 0 18px 36px rgba(15, 23, 42, 0.35);
+            z-index: 25;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 86%;
+            max-width: 310px;
+        }
+
+        .timeout-banner.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .timeout-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #fef08a;
+            margin: 0 0 2px;
+        }
+
+        .timeout-sub {
+            font-size: 0.92rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        /* Revealed Words Card (Replaces balloon right in the center upon pop!) */
+        .reveal-card {
+            display: none;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
+            border: 4px solid var(--s1);
+            animation: burstReveal 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .reveal-card.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .yehey-banner {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: clamp(2rem, 8vw, 3rem);
+            line-height: 1;
+            letter-spacing: 2px;
+            background: linear-gradient(180deg, #fde047 0%, #f97316 55%, #ef4444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 0 #7c2d12);
+            margin-bottom: 10px;
+            animation: yeheyBounce 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) infinite alternate;
+        }
+
+        @keyframes yeheyBounce {
+            0% { transform: scale(0.95) rotate(-3deg); }
+            100% { transform: scale(1.12) rotate(3deg); }
+        }
+
+        @keyframes burstReveal {
+            0% { opacity: 0; transform: scale(0.45); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .reveal-tag {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+        }
+
+        .reveal-words {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: clamp(1.5rem, 6vw, 2.25rem);
+            line-height: 1.25;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        /* Bottom Action Dock */
+        .bottom-dock {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 104px;
+            padding-bottom: 4px;
+        }
+
+        /* HUGE 3D Tactile BIG RED BUTTON */
+        .big-red-btn {
+            width: 100%;
+            max-width: 340px;
+            height: 88px;
+            border-radius: 999px;
+            border: 5px solid #fee2e2;
+            background: radial-gradient(circle at 50% 24%, #ff7575 0%, #ef4444 52%, #dc2626 100%);
+            box-shadow:
+                0 11px 0 #991b1b,
+                0 20px 34px rgba(239, 68, 68, 0.48),
+                inset 0 5px 12px rgba(255, 255, 255, 0.5);
+            color: #ffffff;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 2.1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 3px 5px rgba(127, 29, 29, 0.55);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.07s ease, box-shadow 0.07s ease;
+            animation: redPulse 2s infinite;
+        }
+
+        @keyframes redPulse {
+            0%, 100% {
+                box-shadow: 0 11px 0 #991b1b, 0 18px 30px rgba(239, 68, 68, 0.42), inset 0 5px 12px rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                box-shadow: 0 11px 0 #991b1b, 0 24px 42px rgba(239, 68, 68, 0.7), inset 0 5px 12px rgba(255, 255, 255, 0.65);
+            }
+        }
+
+        .big-red-btn:active, .big-red-btn.pressed {
+            transform: translateY(9px);
+            box-shadow:
+                0 2px 0 #991b1b,
+                0 8px 16px rgba(239, 68, 68, 0.4),
+                inset 0 3px 8px rgba(0, 0, 0, 0.25);
+            animation: none;
+        }
+
+        /* Next Student Button (Shown after pop) */
+        .next-btn {
+            display: none;
+            width: 100%;
+            max-width: 360px;
+            height: 74px;
+            border-radius: 999px;
+            border: 4px solid #dcfce7;
+            background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+            box-shadow: 0 9px 0 #15803d, 0 16px 28px rgba(22, 163, 74, 0.35);
+            color: #ffffff;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 1.45rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+            animation: popIn 0.3s ease;
+        }
+
+        .next-btn.visible {
+            display: flex;
+        }
+
+        .next-btn:active {
+            transform: translateY(7px);
+            box-shadow: 0 2px 0 #15803d, 0 6px 14px rgba(22, 163, 74, 0.25);
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* END SCREEN OVERLAY */
+        .end-screen {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            padding-top: 6px;
+            animation: popIn 0.35s ease;
+        }
+
+        .end-screen.active {
+            display: flex;
+        }
+
+        .end-card {
+            background: #ffffff;
+            border-radius: 26px;
+            padding: 18px 18px 16px;
+            box-shadow: 0 16px 38px rgba(15, 23, 42, 0.12);
+            border: 3px solid #fde047;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            margin-bottom: 12px;
+        }
+
+        .end-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .end-title {
+            font-size: 1.35rem;
+            margin: 0;
+            color: #0f172a;
+        }
+
+        .highlight-toggle {
+            background: #f1f5f9;
+            border: 2px solid #cbd5e1;
+            border-radius: 999px;
+            padding: 5px 10px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #334155;
+            cursor: pointer;
+        }
+
+        .final-paragraph-scroll {
+            flex: 1;
+            overflow-y: auto;
+            font-size: clamp(1.15rem, 4.5vw, 1.45rem);
+            font-weight: 800;
+            line-height: 1.65;
+            color: #0f172a;
+            padding: 4px 2px;
+        }
+
+        .final-chunk {
+            padding: 2px 7px;
+            border-radius: 8px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .final-paragraph-scroll.plain-mode .final-chunk {
+            background: transparent !important;
+            color: #0f172a !important;
+            padding: 0;
+        }
+
+        .student-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding-top: 10px;
+            margin-top: 8px;
+            border-top: 2px dashed #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        .legend-tag {
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 3px 9px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .end-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .end-btn {
+            height: 54px;
+            border-radius: 16px;
+            border: 2px solid #cbd5e1;
+            background: #ffffff;
+            color: #0f172a;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 4px 0 #cbd5e1;
+        }
+
+        .end-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #cbd5e1;
+        }
+
+        .end-btn.primary {
+            grid-column: span 2;
+            height: 62px;
+            background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+            border-color: #1d4ed8;
+            color: #ffffff;
+            font-size: 1.2rem;
+            box-shadow: 0 6px 0 #1e40af;
+        }
+
+        .end-btn.primary:active {
+            box-shadow: 0 2px 0 #1e40af;
+        }
+
+        .end-btn.speak {
+            background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+            border-color: #b45309;
+            color: #ffffff;
+            box-shadow: 0 4px 0 #92400e;
+        }
+
+        /* TEACHER SETUP MODAL */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90dvh;
+            border-radius: 26px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.25);
+            animation: popIn 0.25s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .modal-body {
+            overflow-y: auto;
+            padding-right: 4px;
+            flex: 1;
+        }
+
+        .field-label {
+            display: block;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #334155;
+            margin: 10px 0 6px;
+        }
+
+        .story-select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 14px;
+            border: 2px solid #cbd5e1;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: #0f172a;
+            background: #f8fafc;
+            outline: none;
+        }
+
+        .setup-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 7px;
+        }
+
+        .dot-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            color: #fff;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 0.92rem;
+            color: #0f172a;
+            user-select: text;
+        }
+
+        .text-input:focus {
+            border-color: #3b82f6;
+            outline: none;
+        }
+
+        .modal-footer {
+            margin-top: 12px;
+            flex-shrink: 0;
+        }
+
+        .save-btn {
+            width: 100%;
+            height: 54px;
+            border-radius: 16px;
+            border: none;
+            background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+            box-shadow: 0 5px 0 #15803d;
+            color: #ffffff;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 1.15rem;
+            cursor: pointer;
+        }
+
+        /* Landscape mobile adaptation */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .app-shell {
+                max-width: 100%;
+                padding: 6px 16px;
+            }
+            .balloon-container {
+                height: 40dvh;
+                min-height: 140px;
+            }
+            .big-red-btn {
+                height: 62px;
+                font-size: 1.6rem;
+            }
+            .next-btn {
+                height: 56px;
+                font-size: 1.2rem;
+            }
+            .bottom-dock {
+                min-height: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="fxCanvas"></canvas>
+
+<div class="app-shell">
+    <!-- TOP BAR -->
+    <header class="top-bar" id="mainTopBar">
+        <div class="turn-pill">
+            <div class="turn-badge" id="turnBadge">1</div>
+            <div class="turn-text-group">
+                <span class="turn-student-name" id="turnStudentName">Student 1</span>
+                <span class="turn-counter" id="turnCounter">Student 1 of 5</span>
+            </div>
+        </div>
+
+        <div class="top-actions">
+            <div class="timer-pill" id="timerPill" aria-label="Time Remaining">
+                <span>⏱️</span>
+                <span id="timerText">10.0s</span>
+            </div>
+            <button type="button" class="icon-btn" id="soundBtn" aria-label="Toggle Sound">
+                <span id="soundIcon">🔊</span>
+            </button>
+            <button type="button" class="icon-btn" id="openSetupBtn">
+                <span>⚙️</span>
+                <span>Teacher</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ACTIVE GAMEPLAY VIEW -->
+    <div id="gameplayView" style="display: flex; flex-direction: column; flex: 1; min-height: 0; justify-content: space-between;">
+        <!-- Live Paragraph Strip -->
+        <div class="live-strip" id="liveStrip">
+            <span class="live-strip-empty">Pop the balloon to reveal part 1 of the story!</span>
+        </div>
+
+        <!-- Centerpiece: Huge Floating Balloon OR Revealed Words -->
+        <main class="center-stage">
+            <div class="balloon-container" id="balloonContainer" title="Tap or press PUMP!">
+                <div class="balloon-bobber" id="balloonBobber">
+                    <svg class="balloon-svg" id="balloonSvg" viewBox="0 0 220 285" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="balloonGrad" cx="34%" cy="28%" r="68%">
+                                <stop offset="0%" id="gradLight" stop-color="#fda4af"/>
+                                <stop offset="52%" id="gradMain" stop-color="#f43f5e"/>
+                                <stop offset="100%" id="gradDark" stop-color="#be123c"/>
+                            </radialGradient>
+                        </defs>
+                        <!-- Air Pump Nozzle Tip at Bottom -->
+                        <rect x="103" y="218" width="14" height="14" rx="3" fill="#475569"/>
+                        <rect x="99" y="229" width="22" height="6" rx="3" fill="#334155"/>
+                        <!-- Curled String -->
+                        <path d="M110 235 C 96 248, 124 258, 108 272 C 98 280, 114 284, 110 286" fill="none" stroke="#64748b" stroke-width="3.2" stroke-linecap="round"/>
+                        <!-- Balloon Neck Knot -->
+                        <polygon points="101,218 119,218 110,206" id="balloonKnot" fill="#be123c"/>
+                        <!-- Glossy Balloon Body -->
+                        <path d="M110 10 C 172 10, 210 55, 210 112 C 210 168, 156 204, 110 208 C 64 204, 10 168, 10 112 C 10 55, 48 10, 110 10 Z" fill="url(#balloonGrad)"/>
+                        <!-- Specular Reflection Highlights (Grows shinier under high tension) -->
+                        <ellipse id="balloonShineMain" cx="62" cy="64" rx="18" ry="34" transform="rotate(-24 62 64)" fill="rgba(255,255,255,0.44)"/>
+                        <circle id="balloonShineDot" cx="48" cy="108" r="7" fill="rgba(255,255,255,0.38)"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Air Pump Pressure / Size Gauge -->
+            <div class="pressure-hud" id="pressureHud">
+                <span class="nozzle-icon">💨</span>
+                <div class="pressure-track">
+                    <div class="pressure-fill" id="pressureFill"></div>
+                </div>
+                <span class="pressure-label" id="pressureLabel">0 Pumps</span>
+            </div>
+
+            <!-- Warning Clown (Pops in when countdown <= 4.0s) -->
+            <div class="clown-warning" id="clownWarning">
+                <div class="clown-speech" id="clownSpeech">🤡 HURRY UP!<br>TIME IS RUNNING OUT!</div>
+                <svg class="clown-avatar" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Curly Rainbow Hair -->
+                    <circle cx="24" cy="42" r="14" fill="#ef4444"/>
+                    <circle cx="20" cy="56" r="12" fill="#f59e0b"/>
+                    <circle cx="86" cy="42" r="14" fill="#3b82f6"/>
+                    <circle cx="90" cy="56" r="12" fill="#10b981"/>
+                    <!-- Tiny Party Hat -->
+                    <polygon points="55,6 39,30 71,30" fill="#a855f7" stroke="#fef08a" stroke-width="2"/>
+                    <circle cx="55" cy="6" r="5" fill="#fde047"/>
+                    <!-- Clown Collar & Torso -->
+                    <path d="M26 98 C 32 78, 78 78, 84 98 Z" fill="#3b82f6"/>
+                    <path d="M32 79 Q 43 89 55 79 Q 67 89 78 79" fill="none" stroke="#fef08a" stroke-width="5" stroke-linecap="round"/>
+                    <!-- Waving Arm -->
+                    <g class="clown-arm-wave">
+                        <path d="M78 76 Q 96 60 98 44" fill="none" stroke="#fde68a" stroke-width="8" stroke-linecap="round"/>
+                        <circle cx="98" cy="42" r="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                    </g>
+                    <!-- Face -->
+                    <circle cx="55" cy="54" r="26" fill="#fffbeb" stroke="#fde68a" stroke-width="2"/>
+                    <!-- Wide Panicked Eyes -->
+                    <circle cx="46" cy="47" r="6.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.8"/>
+                    <circle cx="64" cy="47" r="6.5" fill="#ffffff" stroke="#0f172a" stroke-width="1.8"/>
+                    <circle cx="46" cy="47" r="2.6" fill="#0f172a"/>
+                    <circle cx="64" cy="47" r="2.6" fill="#0f172a"/>
+                    <!-- Raised Eyebrows -->
+                    <path d="M39 38 Q 46 33 52 38" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M58 38 Q 64 33 71 38" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- Big Red Nose -->
+                    <circle cx="55" cy="56" r="7.5" fill="#ef4444"/>
+                    <circle cx="52.5" cy="53.5" r="2.2" fill="rgba(255,255,255,0.75)"/>
+                    <!-- Open Shouting Mouth -->
+                    <ellipse cx="55" cy="69" rx="9" ry="6.5" fill="#991b1b" stroke="#ef4444" stroke-width="2.5"/>
+                    <path d="M49 71 Q 55 67 61 71" fill="#f43f5e"/>
+                </svg>
+            </div>
+
+            <!-- Time's Up Retry Banner -->
+            <div class="timeout-banner" id="timeoutBanner">
+                <p class="timeout-title">⏰ TIME'S UP!</p>
+                <p class="timeout-sub" id="timeoutSub">Balloon deflated! Pump faster &amp; try again!</p>
+            </div>
+
+            <!-- Revealed Phrase Card (Appears in place of balloon after POP!) -->
+            <div class="reveal-card" id="revealCard">
+                <div class="yehey-banner">🎉 YEHEY!!! 🎉</div>
+                <span class="reveal-tag" id="revealTag">Student 1 Revealed</span>
+                <p class="reveal-words" id="revealWords">Yesterday morning, a curious cat</p>
+            </div>
+        </main>
+
+        <!-- Bottom Centerpiece: BIG RED BUTTON or NEXT STUDENT BUTTON -->
+        <footer class="bottom-dock">
+            <button type="button" class="big-red-btn" id="bigRedBtn">
+                <span>💨</span>
+                <span id="bigRedBtnText">PUMP!</span>
+            </button>
+
+            <button type="button" class="next-btn" id="nextBtn">
+                <span id="nextBtnLabel">Next Student →</span>
+            </button>
+        </footer>
+    </div>
+
+    <!-- END SCREEN (After all 5 students pop) -->
+    <section class="end-screen" id="endScreen">
+        <div class="end-card">
+            <div class="end-header">
+                <h2 class="end-title">🎉 Complete Paragraph!</h2>
+                <button type="button" class="highlight-toggle" id="highlightToggleBtn">
+                    🎨 Colors: ON
+                </button>
+            </div>
+
+            <div class="final-paragraph-scroll" id="finalParagraphText"></div>
+
+            <div class="student-legend" id="studentLegend"></div>
+        </div>
+
+        <div class="end-controls">
+            <button type="button" class="end-btn speak" id="readAloudBtn">
+                <span>🗣️</span>
+                <span>Read Aloud</span>
+            </button>
+            <button type="button" class="end-btn" id="copyTextBtn">
+                <span>📋</span>
+                <span>Copy Text</span>
+            </button>
+            <button type="button" class="end-btn" id="teacherEditEndBtn">
+                <span>✏️</span>
+                <span>Teacher Edit</span>
+            </button>
+            <button type="button" class="end-btn" id="playAgainSameBtn">
+                <span>🔁</span>
+                <span>Replay Same</span>
+            </button>
+            <button type="button" class="end-btn primary" id="newStoryBtn">
+                <span>🎈</span>
+                <span>Next Story</span>
+            </button>
+        </div>
+    </section>
+</div>
+
+<!-- TEACHER SETUP & CUSTOM STORY MODAL -->
+<div class="modal-backdrop" id="setupModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h2>⚙️ Teacher Setup</h2>
+            <button type="button" class="icon-btn" id="closeSetupBtn">✕</button>
+        </div>
+
+        <div class="modal-body">
+            <label class="field-label" for="storySelect">Choose Story or Edit Custom 5 Parts</label>
+            <select id="storySelect" class="story-select"></select>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div>
+                    <label class="field-label" for="difficultySelect">Pop Difficulty</label>
+                    <select id="difficultySelect" class="story-select">
+                        <option value="easy">Easy (12–15 Pumps)</option>
+                        <option value="hard" selected>Hard (18–24 Pumps)</option>
+                        <option value="extreme">Extreme (25–30 Pumps)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="field-label" for="timeLimitSelect">Turn Timer</label>
+                    <select id="timeLimitSelect" class="story-select">
+                        <option value="8">8 Seconds</option>
+                        <option value="10" selected>10 Seconds</option>
+                        <option value="12">12 Seconds</option>
+                        <option value="15">15 Seconds</option>
+                    </select>
+                </div>
+            </div>
+
+            <span class="field-label">5 Story Parts (1 per Balloon)</span>
+            <div id="storyPartsInputs"></div>
+
+            <span class="field-label">5 Student Names</span>
+            <div id="studentNameInputs"></div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="save-btn" id="saveSetupBtn">
+                ✅ Apply &amp; Start Round
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    /**
+     * Pop the Balloon: Story Reveal
+     * Clean, zero-choice classroom game for 5 students.
+     */
+
+    const STUDENT_THEMES = [
+        { main: '#f43f5e', light: '#fda4af', dark: '#be123c', tintBg: '#ffe4e6', tintText: '#9f1239' },
+        { main: '#f59e0b', light: '#fcd34d', dark: '#b45309', tintBg: '#fef3c7', tintText: '#92400e' },
+        { main: '#10b981', light: '#6ee7b7', dark: '#047857', tintBg: '#d1fae5', tintText: '#065f46' },
+        { main: '#3b82f6', light: '#93c5fd', dark: '#1d4ed8', tintBg: '#dbeafe', tintText: '#1e40af' },
+        { main: '#8b5cf6', light: '#c4b5fd', dark: '#6d28d9', tintBg: '#ede9fe', tintText: '#5b21b6' }
+    ];
+
+    // Built-in library of 8 engaging 5-part short paragraphs for ESL / classroom reading
+    const BUILTIN_STORIES = [
+        {
+            title: "1. The Curious Cat & Mangoes",
+            parts: [
+                "Yesterday morning, a curious cat",
+                "jumped onto the busy kitchen table",
+                "and knocked over a bowl of fresh mangoes.",
+                "Everyone laughed as the yellow fruit",
+                "rolled right toward the smiling dog!"
+            ]
+        },
+        {
+            title: "2. The Magical School Backpack",
+            parts: [
+                "During science class on Friday,",
+                "Maya opened her blue school backpack",
+                "and found a tiny glowing rocket ship.",
+                "Suddenly, it zoomed around the whiteboard",
+                "and sprinkled silver stars on every desk!"
+            ]
+        },
+        {
+            title: "3. Rainy Day Adventure",
+            parts: [
+                "When dark rain clouds covered the park,",
+                "five best friends put on yellow boots",
+                "and splashed through the biggest puddles.",
+                "Before long, a bright double rainbow",
+                "appeared right above the playground slide!"
+            ]
+        },
+        {
+            title: "4. The Skateboarding Penguin",
+            parts: [
+                "At the sunny city zoo,",
+                "a clever penguin borrowed a red skateboard",
+                "and zoomed past the surprised flamingos.",
+                "All the visitors clapped and cheered",
+                "as the penguin did a giant spin!"
+            ]
+        },
+        {
+            title: "5. Grandma's Secret Cookies",
+            parts: [
+                "On Sunday afternoon in the warm kitchen,",
+                "Leo helped his grandma mix chocolate chips",
+                "into a giant bowl of sweet cookie dough.",
+                "Twenty minutes later, the delicious smell",
+                "brought the whole family running to eat!"
+            ]
+        },
+        {
+            title: "6. Lost Treasure at the Beach",
+            parts: [
+                "While building a huge sandcastle,",
+                "two brothers uncovered an old wooden bottle",
+                "buried deep beneath the wet seashells.",
+                "Inside was a colorful treasure map",
+                "leading straight to the ice cream shop!"
+            ]
+        },
+        {
+            title: "7. The Sleepy Dragon",
+            parts: [
+                "High on top of a misty mountain,",
+                "a friendly green dragon woke up from a nap",
+                "and let out a giant smoky sneeze.",
+                "Instead of fire, hundreds of soap bubbles",
+                "floated gently down to the village below!"
+            ]
+        },
+        {
+            title: "8. Midnight at the Toy Store",
+            parts: [
+                "As soon as the toy store lights turned off,",
+                "a brave teddy bear climbed off the shelf",
+                "and started playing a tiny toy piano.",
+                "Soon, all the dolls and robots joined in",
+                "for the happiest dance party ever!"
+            ]
+        }
+    ];
+
+    const state = {
+        students: ["Student 1", "Student 2", "Student 3", "Student 4", "Student 5"],
+        storyIndex: 0,
+        storyParts: [...BUILTIN_STORIES[0].parts],
+        turn: 0, // 0..4
+        pumps: 0,
+        targetPumps: 20, // Much harder to pop: 18..24 by default
+        difficulty: 'hard', // 'easy' (12-15), 'hard' (18-24), 'extreme' (25-30)
+        turnDuration: 10.0, // Seconds per student turn
+        timeLeft: 10.0,
+        timerInterval: null,
+        lastTickSecond: 10,
+        lastPumpTimestamp: 0,
+        clownShown: false,
+        isPopped: false,
+        isResettingTimeout: false,
+        soundOn: true,
+        highlightColors: true
+    };
+
+    // Web Audio Synthesizer for Realistic Hand Pump, Balloon Pop & "YEHEY!!!" Celebration
+    let audioCtx = null;
+
+    function ensureAudioContext() {
+        if (!audioCtx) {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (AudioContextClass) {
+                audioCtx = new AudioContextClass();
+            }
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
+
+    // Realistic Bike/Hand Air-Pump "Whoosh-Chuff" + Pneumatic Pitch Sweep + Valve Click
+    function playPumpSound(progress = 0) {
+        if (!state.soundOn) return;
+        try {
+            ensureAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const pitchBoost = 1 + progress * 0.95;
+
+            // 1. Air-pump "Whoosh-Chuff" filtered white noise burst
+            const len = Math.floor(audioCtx.sampleRate * 0.18);
+            const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+            const data = buf.getChannelData(0);
+            for (let i = 0; i < len; i++) {
+                const env = Math.pow(Math.sin((i / len) * Math.PI), 0.75);
+                data[i] = (Math.random() * 2 - 1) * env;
+            }
+            const hiss = audioCtx.createBufferSource();
+            hiss.buffer = buf;
+
+            const hFilter = audioCtx.createBiquadFilter();
+            hFilter.type = 'bandpass';
+            hFilter.frequency.setValueAtTime(950 * pitchBoost, now);
+            hFilter.frequency.exponentialRampToValueAtTime(2200 * pitchBoost, now + 0.16);
+            hFilter.Q.setValueAtTime(1.2, now);
+
+            const hGain = audioCtx.createGain();
+            hGain.gain.setValueAtTime(0.38, now);
+            hGain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+
+            hiss.connect(hFilter);
+            hFilter.connect(hGain);
+            hGain.connect(audioCtx.destination);
+            hiss.start(now);
+
+            // 2. Pneumatic rising pitch sweep (air rushing into stretched rubber)
+            const osc = audioCtx.createOscillator();
+            const oGain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(145 * pitchBoost, now);
+            osc.frequency.exponentialRampToValueAtTime(295 * pitchBoost, now + 0.16);
+            oGain.gain.setValueAtTime(0.24, now);
+            oGain.gain.exponentialRampToValueAtTime(0.001, now + 0.17);
+            osc.connect(oGain);
+            oGain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.18);
+
+            // 3. Mechanical pump check-valve click at the end of the stroke
+            const clickOsc = audioCtx.createOscillator();
+            const clickGain = audioCtx.createGain();
+            clickOsc.type = 'square';
+            clickOsc.frequency.setValueAtTime(520 * pitchBoost, now + 0.13);
+            clickOsc.frequency.exponentialRampToValueAtTime(160, now + 0.165);
+            clickGain.gain.setValueAtTime(0.14, now + 0.13);
+            clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.17);
+            clickOsc.connect(clickGain);
+            clickGain.connect(audioCtx.destination);
+            clickOsc.start(now + 0.13);
+            clickOsc.stop(now + 0.175);
+        } catch (e) {
+            // Audio blocked or unsupported
+        }
+    }
+
+    // Loud Realistic Balloon Explosion (Sub-bass thump + sharp crackle burst)
+    function playPopSound() {
+        if (!state.soundOn) return;
+        try {
+            ensureAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+
+            // Sharp noise crackle burst
+            const len = Math.floor(audioCtx.sampleRate * 0.34);
+            const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+            const data = buf.getChannelData(0);
+            for (let i = 0; i < len; i++) {
+                data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (audioCtx.sampleRate * 0.045));
+            }
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = buf;
+
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(980, now);
+            filter.Q.setValueAtTime(0.6, now);
+
+            const gain = audioCtx.createGain();
+            gain.gain.setValueAtTime(1.0, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.31);
+
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioCtx.destination);
+            noise.start(now);
+
+            // Sub-bass punch thump
+            const sub = audioCtx.createOscillator();
+            const subGain = audioCtx.createGain();
+            sub.type = 'sine';
+            sub.frequency.setValueAtTime(210, now);
+            sub.frequency.exponentialRampToValueAtTime(32, now + 0.24);
+            subGain.gain.setValueAtTime(0.95, now);
+            subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+            sub.connect(subGain);
+            subGain.connect(audioCtx.destination);
+            sub.start(now);
+            sub.stop(now + 0.26);
+        } catch (e) {
+            // Audio blocked or unsupported
+        }
+    }
+
+    // Energetic "YEHEY!!!" Voice Cheer + Celebratory Fanfare Chime + Crowd Applause Shimmer
+    function playYeheySound(isGrandFinale = false) {
+        if (!state.soundOn) return;
+        try {
+            ensureAudioContext();
+            if (audioCtx) {
+                const now = audioCtx.currentTime;
+
+                // 1. Upbeat celebratory fanfare arpeggio
+                const notes = isGrandFinale
+                    ? [523.25, 659.25, 783.99, 1046.5, 1318.51]
+                    : [523.25, 659.25, 783.99, 1046.5];
+                notes.forEach((f, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    const t = now + idx * 0.075;
+                    osc.frequency.setValueAtTime(f, t);
+                    gain.gain.setValueAtTime(0.24, t);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(t);
+                    osc.stop(t + 0.46);
+                });
+
+                // 2. Synthesized crowd cheer / applause shimmer (works even if speechSynthesis is muted)
+                const cheerDur = isGrandFinale ? 1.1 : 0.75;
+                const cheerLen = Math.floor(audioCtx.sampleRate * cheerDur);
+                const cheerBuf = audioCtx.createBuffer(1, cheerLen, audioCtx.sampleRate);
+                const cheerData = cheerBuf.getChannelData(0);
+                for (let i = 0; i < cheerLen; i++) {
+                    const env = Math.sin((i / cheerLen) * Math.PI);
+                    const clapFlutter = 0.65 + 0.35 * Math.sin(i * 0.045);
+                    cheerData[i] = (Math.random() * 2 - 1) * env * clapFlutter;
+                }
+                const cheerSrc = audioCtx.createBufferSource();
+                cheerSrc.buffer = cheerBuf;
+
+                const cheerFilter = audioCtx.createBiquadFilter();
+                cheerFilter.type = 'bandpass';
+                cheerFilter.frequency.setValueAtTime(1650, now);
+                cheerFilter.Q.setValueAtTime(0.9, now);
+
+                const cheerGain = audioCtx.createGain();
+                cheerGain.gain.setValueAtTime(0.22, now);
+                cheerGain.gain.exponentialRampToValueAtTime(0.005, now + cheerDur);
+
+                cheerSrc.connect(cheerFilter);
+                cheerFilter.connect(cheerGain);
+                cheerGain.connect(audioCtx.destination);
+                cheerSrc.start(now);
+
+                // 3. Formant-style "Ye-HEY!" synthesized vocal glide backup
+                const vOsc = audioCtx.createOscillator();
+                const vFilter = audioCtx.createBiquadFilter();
+                const vGain = audioCtx.createGain();
+                vOsc.type = 'sawtooth';
+                vOsc.frequency.setValueAtTime(340, now + 0.05);
+                vOsc.frequency.linearRampToValueAtTime(540, now + 0.22);
+                vOsc.frequency.exponentialRampToValueAtTime(480, now + 0.55);
+
+                vFilter.type = 'bandpass';
+                vFilter.frequency.setValueAtTime(1200, now + 0.05);
+                vFilter.frequency.linearRampToValueAtTime(1950, now + 0.22);
+                vFilter.Q.setValueAtTime(3.2, now + 0.05);
+
+                vGain.gain.setValueAtTime(0.001, now + 0.04);
+                vGain.gain.linearRampToValueAtTime(0.14, now + 0.14);
+                vGain.gain.exponentialRampToValueAtTime(0.001, now + 0.58);
+
+                vOsc.connect(vFilter);
+                vFilter.connect(vGain);
+                vGain.connect(audioCtx.destination);
+                vOsc.start(now + 0.04);
+                vOsc.stop(now + 0.6);
+            }
+
+            // 4. Energetic Web Speech API "YEHEY!!!" exclamation
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const cheerUtterance = new SpeechSynthesisUtterance('Yehey!');
+                cheerUtterance.pitch = 1.45;
+                cheerUtterance.rate = 1.15;
+                cheerUtterance.volume = 1.0;
+                window.speechSynthesis.speak(cheerUtterance);
+            }
+        } catch (e) {
+            // Audio or Speech blocked
+        }
+    }
+
+    // Countdown Tick Sound (Urgent double-beep in final 4 seconds)
+    function playTickSound(urgent = false) {
+        if (!state.soundOn) return;
+        try {
+            ensureAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = urgent ? 'square' : 'sine';
+            osc.frequency.setValueAtTime(urgent ? 980 : 620, now);
+            gain.gain.setValueAtTime(urgent ? 0.11 : 0.05, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.065);
+        } catch (e) {}
+    }
+
+    // Clown Honk + Voice Warning ("Hurry up! Time is running out!")
+    function playClownWarningSound() {
+        if (!state.soundOn) return;
+        try {
+            ensureAudioContext();
+            if (audioCtx) {
+                const now = audioCtx.currentTime;
+                // Two comedic clown horn honks ("Honk-Honk!")
+                [0, 0.16].forEach((offset) => {
+                    const osc = audioCtx.createOscillator();
+                    const filter = audioCtx.createBiquadFilter();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(310, now + offset);
+                    osc.frequency.linearRampToValueAtTime(375, now + offset + 0.06);
+                    osc.frequency.linearRampToValueAtTime(290, now + offset + 0.13);
+
+                    filter.type = 'bandpass';
+                    filter.frequency.setValueAtTime(950, now + offset);
+                    filter.Q.setValueAtTime(2.5, now + offset);
+
+                    gain.gain.setValueAtTime(0.24, now + offset);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.14);
+
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + offset);
+                    osc.stop(now + offset + 0.15);
+                });
+            }
+
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const warnSpeech = new SpeechSynthesisUtterance('Hurry up! Time is running out!');
+                warnSpeech.pitch = 1.4;
+                warnSpeech.rate = 1.25;
+                warnSpeech.volume = 1.0;
+                window.speechSynthesis.speak(warnSpeech);
+            }
+        } catch (e) {}
+    }
+
+    // Deflating "Pfffttt" Balloon + Sad Clown Slide When Time Runs Out
+    function playDeflateTimeoutSound() {
+        if (!state.soundOn) return;
+        try {
+            ensureAudioContext();
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+
+            // Deflating air sputter
+            const len = Math.floor(audioCtx.sampleRate * 0.55);
+            const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+            const data = buf.getChannelData(0);
+            for (let i = 0; i < len; i++) {
+                const flutter = 0.5 + 0.5 * Math.sin(i * 0.09);
+                data[i] = (Math.random() * 2 - 1) * flutter * (1 - i / len);
+            }
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = buf;
+
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(1400, now);
+            filter.frequency.exponentialRampToValueAtTime(320, now + 0.52);
+
+            const nGain = audioCtx.createGain();
+            nGain.gain.setValueAtTime(0.35, now);
+            nGain.gain.exponentialRampToValueAtTime(0.005, now + 0.54);
+
+            noise.connect(filter);
+            filter.connect(nGain);
+            nGain.connect(audioCtx.destination);
+            noise.start(now);
+
+            // Sad descending horn ("Wah-wah-waaaah")
+            const osc = audioCtx.createOscillator();
+            const oGain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(340, now + 0.05);
+            osc.frequency.linearRampToValueAtTime(290, now + 0.25);
+            osc.frequency.exponentialRampToValueAtTime(145, now + 0.62);
+            oGain.gain.setValueAtTime(0.18, now + 0.05);
+            oGain.gain.exponentialRampToValueAtTime(0.001, now + 0.64);
+            osc.connect(oGain);
+            oGain.connect(audioCtx.destination);
+            osc.start(now + 0.05);
+            osc.stop(now + 0.65);
+        } catch (e) {}
+    }
+
+    function playSound(type, progress = 0) {
+        if (!state.soundOn) return;
+        if (type === 'pump') {
+            playPumpSound(progress);
+        } else if (type === 'pop') {
+            playPopSound();
+        } else if (type === 'yehey') {
+            playYeheySound(false);
+        } else if (type === 'fanfare') {
+            playYeheySound(true);
+        } else if (type === 'next') {
+            try {
+                ensureAudioContext();
+                if (!audioCtx) return;
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.exponentialRampToValueAtTime(660, now + 0.1);
+                gain.gain.setValueAtTime(0.16, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.12);
+            } catch (e) {}
+        }
+    }
+
+    // Confetti & Rubber Shards Canvas Physics
+    const canvas = document.getElementById('fxCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let rafId = null;
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function spawnExplosion(x, y, palette, count = 65) {
+        for (let i = 0; i < count; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 5 + Math.random() * 14;
+            const isShard = i % 3 === 0;
+            particles.push({
+                x,
+                y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed - 3,
+                w: isShard ? (10 + Math.random() * 10) : (7 + Math.random() * 7),
+                h: isShard ? (5 + Math.random() * 6) : (7 + Math.random() * 7),
+                color: palette[Math.floor(Math.random() * palette.length)],
+                alpha: 1,
+                gravity: 0.34,
+                drag: 0.95,
+                rot: Math.random() * 360,
+                vRot: (Math.random() - 0.5) * 18,
+                isCircle: !isShard && Math.random() > 0.5
+            });
+        }
+        if (!rafId) animateParticles();
+    }
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.vx *= p.drag;
+            p.vy = p.vy * p.drag + p.gravity;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.rot += p.vRot;
+            p.alpha -= 0.014;
+
+            if (p.alpha <= 0 || p.y > canvas.height + 40) {
+                particles.splice(i, 1);
+                continue;
+            }
+
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, p.alpha);
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rot * Math.PI) / 180);
+            ctx.fillStyle = p.color;
+            if (p.isCircle) {
+                ctx.beginPath();
+                ctx.arc(0, 0, p.w * 0.5, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                ctx.fillRect(-p.w * 0.5, -p.h * 0.5, p.w, p.h);
+            }
+            ctx.restore();
+        }
+
+        if (particles.length > 0) {
+            rafId = requestAnimationFrame(animateParticles);
+        } else {
+            rafId = null;
+        }
+    }
+
+    // DOM References
+    const mainTopBar = document.getElementById('mainTopBar');
+    const gameplayView = document.getElementById('gameplayView');
+    const endScreen = document.getElementById('endScreen');
+    const turnBadge = document.getElementById('turnBadge');
+    const turnStudentName = document.getElementById('turnStudentName');
+    const turnCounter = document.getElementById('turnCounter');
+    const liveStrip = document.getElementById('liveStrip');
+    const balloonContainer = document.getElementById('balloonContainer');
+    const balloonBobber = document.getElementById('balloonBobber');
+    const balloonSvg = document.getElementById('balloonSvg');
+    const balloonShineMain = document.getElementById('balloonShineMain');
+    const balloonShineDot = document.getElementById('balloonShineDot');
+    const pressureHud = document.getElementById('pressureHud');
+    const pressureFill = document.getElementById('pressureFill');
+    const pressureLabel = document.getElementById('pressureLabel');
+    const timerPill = document.getElementById('timerPill');
+    const timerText = document.getElementById('timerText');
+    const clownWarning = document.getElementById('clownWarning');
+    const clownSpeech = document.getElementById('clownSpeech');
+    const timeoutBanner = document.getElementById('timeoutBanner');
+    const timeoutSub = document.getElementById('timeoutSub');
+    const revealCard = document.getElementById('revealCard');
+    const revealTag = document.getElementById('revealTag');
+    const revealWords = document.getElementById('revealWords');
+    const bigRedBtn = document.getElementById('bigRedBtn');
+    const bigRedBtnText = document.getElementById('bigRedBtnText');
+    const nextBtn = document.getElementById('nextBtn');
+    const nextBtnLabel = document.getElementById('nextBtnLabel');
+
+    function getTargetPumpsForDifficulty() {
+        if (state.difficulty === 'easy') {
+            return 12 + Math.floor(Math.random() * 4); // 12..15
+        }
+        if (state.difficulty === 'extreme') {
+            return 25 + Math.floor(Math.random() * 6); // 25..30
+        }
+        return 18 + Math.floor(Math.random() * 7); // Default Hard: 18..24
+    }
+
+    function stopTurnTimer() {
+        if (state.timerInterval) {
+            clearInterval(state.timerInterval);
+            state.timerInterval = null;
+        }
+    }
+
+    function updateTimerUI() {
+        const clamped = Math.max(0, state.timeLeft);
+        timerText.textContent = `${clamped.toFixed(1)}s`;
+        const urgentThreshold = Math.min(4.0, state.turnDuration * 0.4);
+        if (clamped <= urgentThreshold && clamped > 0 && !state.isPopped) {
+            timerPill.classList.add('urgent');
+        } else {
+            timerPill.classList.remove('urgent');
+        }
+    }
+
+    function startTurnTimer() {
+        stopTurnTimer();
+        state.timeLeft = state.turnDuration;
+        state.lastTickSecond = Math.ceil(state.turnDuration);
+        state.clownShown = false;
+        clownWarning.classList.remove('active');
+        clownSpeech.innerHTML = '🤡 HURRY UP!<br>TIME IS RUNNING OUT!';
+        updateTimerUI();
+
+        state.timerInterval = setInterval(() => {
+            if (state.isPopped || state.isResettingTimeout) return;
+            // Pause countdown while Teacher Setup modal is open
+            if (setupModal.classList.contains('open')) return;
+
+            const now = performance.now();
+            state.timeLeft = Math.max(0, state.timeLeft - 0.1);
+            updateTimerUI();
+
+            // Slight air leakage if the student stops pumping for > 1.2s
+            if (state.pumps > 0 && now - state.lastPumpTimestamp > 1200) {
+                state.pumps = Math.max(0, state.pumps - 0.35);
+                updateInflationVisuals(false);
+            }
+
+            // Trigger animated Clown warning when countdown hits 4.0s (or 40% remaining)
+            const urgentThreshold = Math.min(4.0, state.turnDuration * 0.4);
+            if (state.timeLeft <= urgentThreshold && state.timeLeft > 0 && !state.clownShown) {
+                state.clownShown = true;
+                clownWarning.classList.add('active');
+                playClownWarningSound();
+            }
+
+            // Clock tick sound each whole second
+            const wholeSec = Math.ceil(state.timeLeft);
+            if (wholeSec < state.lastTickSecond && wholeSec > 0) {
+                state.lastTickSecond = wholeSec;
+                playTickSound(state.timeLeft <= urgentThreshold);
+            }
+
+            // Time ran out! Deflate & retry the EXACT SAME balloon for the SAME student
+            if (state.timeLeft <= 0) {
+                handleTurnTimeout();
+            }
+        }, 100);
+    }
+
+    function handleTurnTimeout() {
+        stopTurnTimer();
+        state.isResettingTimeout = true;
+        bigRedBtn.disabled = true;
+        timerPill.classList.remove('urgent');
+
+        if (navigator.vibrate) {
+            navigator.vibrate([90, 40, 90]);
+        }
+
+        playDeflateTimeoutSound();
+
+        // Clown laughs/encourages & balloon shrinks back to tiny size
+        clownWarning.classList.add('active');
+        clownSpeech.innerHTML = '🤡 TOO SLOW!<br>PUMP IT AGAIN!';
+
+        state.pumps = 0;
+        updateInflationVisuals(false);
+
+        timeoutSub.textContent = `${state.students[state.turn]}, pump faster & try again!`;
+        timeoutBanner.classList.add('show');
+
+        // After 1.6s, hide banner and reset timer for the SAME balloon & SAME student
+        setTimeout(() => {
+            timeoutBanner.classList.remove('show');
+            clownWarning.classList.remove('active');
+            state.isResettingTimeout = false;
+            bigRedBtn.disabled = false;
+            state.lastPumpTimestamp = performance.now();
+            startTurnTimer();
+        }, 1650);
+    }
+
+    // Update balloon size, stretch, shine, and tension tremble based on pump count
+    function updateInflationVisuals(animatePulse = false) {
+        const ratio = Math.min(1, state.pumps / state.targetPumps);
+        // Scale starts noticeably TINY (0.32x) and grows dramatically up to HUGE (1.60x) right before bursting
+        const baseScale = 0.32 + ratio * 1.28;
+        // Balloon stretches slightly wider as rubber thins out under high pressure
+        const stretchX = baseScale * (1 + ratio * 0.09);
+        const stretchY = baseScale * (1 - ratio * 0.03);
+
+        balloonContainer.style.transform = `scale(${stretchX.toFixed(3)}, ${stretchY.toFixed(3)})`;
+
+        // Rubber gets shinier and glows intense red under high tension
+        balloonShineMain.setAttribute('fill', `rgba(255,255,255,${(0.42 + ratio * 0.38).toFixed(2)})`);
+        balloonShineDot.setAttribute('fill', `rgba(255,255,255,${(0.36 + ratio * 0.38).toFixed(2)})`);
+        if (ratio >= 0.65) {
+            balloonSvg.style.filter = `drop-shadow(0 0 ${Math.round(18 + ratio * 28)}px rgba(239, 68, 68, 0.72))`;
+        } else {
+            balloonSvg.style.filter = `drop-shadow(0 18px 24px rgba(15, 23, 42, 0.2))`;
+        }
+
+        // Update Pressure Gauge HUD ("Pumps: X")
+        const displayPumps = Math.floor(state.pumps);
+        const pct = Math.max(6, Math.round(ratio * 100));
+        pressureFill.style.width = `${pct}%`;
+        if (ratio >= 0.8) {
+            pressureLabel.textContent = `Pumps: ${displayPumps} 🔥`;
+            pressureLabel.style.color = '#dc2626';
+        } else {
+            pressureLabel.textContent = `Pumps: ${displayPumps}`;
+            pressureLabel.style.color = '#334155';
+        }
+
+        // Tension wobble classes
+        balloonBobber.classList.remove('tense-1', 'tense-2', 'tense-3', 'pump-pulse');
+        if (animatePulse) {
+            void balloonBobber.offsetWidth;
+            balloonBobber.classList.add('pump-pulse');
+            pressureHud.classList.remove('bump');
+            void pressureHud.offsetWidth;
+            pressureHud.classList.add('bump');
+            setTimeout(() => pressureHud.classList.remove('bump'), 160);
+        }
+
+        // Re-apply steady tremble state
+        setTimeout(() => {
+            if (state.isPopped) return;
+            balloonBobber.classList.remove('pump-pulse');
+            if (ratio >= 0.75) {
+                balloonBobber.classList.add('tense-3');
+            } else if (ratio >= 0.45) {
+                balloonBobber.classList.add('tense-2');
+            } else if (ratio > 0) {
+                balloonBobber.classList.add('tense-1');
+            }
+        }, animatePulse ? 250 : 0);
+    }
+
+    // Render Turn State
+    function loadTurn(turnIdx) {
+        stopTurnTimer();
+        state.turn = turnIdx;
+        state.pumps = 0;
+        // Harder to pop based on difficulty (default Hard: 18..24 pumps)
+        state.targetPumps = getTargetPumpsForDifficulty();
+        state.isPopped = false;
+        state.isResettingTimeout = false;
+        state.lastPumpTimestamp = performance.now();
+
+        const theme = STUDENT_THEMES[turnIdx];
+        const studentName = state.students[turnIdx];
+
+        // Top Bar
+        turnBadge.textContent = turnIdx + 1;
+        turnBadge.style.background = theme.main;
+        turnStudentName.textContent = studentName;
+        turnCounter.textContent = `Student ${turnIdx + 1} of 5`;
+
+        // Balloon Colors & Reset
+        document.getElementById('gradLight').setAttribute('stop-color', theme.light);
+        document.getElementById('gradMain').setAttribute('stop-color', theme.main);
+        document.getElementById('gradDark').setAttribute('stop-color', theme.dark);
+        document.getElementById('balloonKnot').setAttribute('fill', theme.dark);
+
+        balloonContainer.classList.remove('exploding');
+        balloonContainer.style.display = 'flex';
+        pressureHud.style.display = 'flex';
+        timeoutBanner.classList.remove('show');
+        clownWarning.classList.remove('active');
+        revealCard.classList.remove('active');
+
+        updateInflationVisuals(false);
+
+        // Buttons
+        bigRedBtn.style.display = 'flex';
+        bigRedBtn.disabled = false;
+        bigRedBtnText.textContent = 'PUMP!';
+        nextBtn.classList.remove('visible');
+
+        renderLiveStrip();
+        startTurnTimer();
+    }
+
+    function renderLiveStrip() {
+        const revealedCount = state.isPopped ? state.turn + 1 : state.turn;
+        if (revealedCount === 0) {
+            liveStrip.innerHTML = `<span class="live-strip-empty">Pump the balloon until it pops to reveal Part 1!</span>`;
+            return;
+        }
+
+        let html = '';
+        for (let i = 0; i < revealedCount; i++) {
+            const t = STUDENT_THEMES[i];
+            html += `<span class="strip-chunk" style="background:${t.tintBg}; color:${t.tintText};">${state.storyParts[i]}</span>`;
+        }
+        liveStrip.innerHTML = html;
+        liveStrip.scrollTop = liveStrip.scrollHeight;
+    }
+
+    // Core Pump Action (Triggered by Big Red Button or tapping the balloon)
+    function handlePumpAction(e) {
+        if (e && e.cancelable) e.preventDefault();
+        if (state.isPopped || state.isResettingTimeout) return;
+
+        state.lastPumpTimestamp = performance.now();
+
+        // Tactile button depression feedback
+        bigRedBtn.classList.add('pressed');
+        setTimeout(() => bigRedBtn.classList.remove('pressed'), 90);
+
+        state.pumps += 1;
+        const progress = Math.min(1, state.pumps / state.targetPumps);
+
+        // Check if balloon has reached burst pressure!
+        if (state.pumps >= state.targetPumps) {
+            triggerBalloonPop();
+            return;
+        }
+
+        // Otherwise inflate bigger with rising air-pump sound & subtle air puff particles
+        if (navigator.vibrate) {
+            navigator.vibrate(25 + Math.round(progress * 35));
+        }
+        playSound('pump', progress);
+        updateInflationVisuals(true);
+
+        // Small air puff sparkles near the nozzle
+        const rect = balloonContainer.getBoundingClientRect();
+        spawnExplosion(rect.left + rect.width / 2, rect.bottom - 14, ['#ffffff', '#bae6fd', '#e0f2fe'], 8);
+    }
+
+    function triggerBalloonPop() {
+        stopTurnTimer();
+        state.isPopped = true;
+        bigRedBtn.disabled = true;
+        timerPill.classList.remove('urgent');
+        clownWarning.classList.remove('active');
+
+        if (navigator.vibrate) {
+            navigator.vibrate([60, 30, 95]);
+        }
+
+        playSound('pop');
+        setTimeout(() => playSound('yehey'), 140);
+
+        // Explosion center coordinates from balloon
+        const rect = balloonContainer.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height * 0.42;
+        const theme = STUDENT_THEMES[state.turn];
+
+        spawnExplosion(cx, cy, [theme.main, theme.light, '#fde047', '#38bdf8', '#ffffff'], 80);
+        balloonContainer.classList.add('exploding');
+        pressureHud.style.display = 'none';
+
+        // Swap balloon for giant revealed words right in the center
+        setTimeout(() => {
+            balloonContainer.style.display = 'none';
+            bigRedBtn.style.display = 'none';
+
+            revealCard.style.borderColor = theme.main;
+            revealTag.style.background = theme.tintBg;
+            revealTag.style.color = theme.tintText;
+            revealTag.textContent = `${state.students[state.turn]}'s Words`;
+            revealWords.textContent = state.storyParts[state.turn];
+            revealCard.classList.add('active');
+
+            nextBtnLabel.textContent = state.turn < 4 ? 'Next Student →' : 'Read Full Paragraph →';
+            nextBtn.classList.add('visible');
+
+            renderLiveStrip();
+        }, 220);
+    }
+
+    // Fast zero-delay pointerdown pumping so mobile students can mash rapidly!
+    bigRedBtn.addEventListener('pointerdown', handlePumpAction);
+    balloonContainer.addEventListener('pointerdown', handlePumpAction);
+
+    // Next Student or End Screen
+    nextBtn.addEventListener('click', () => {
+        playSound('next');
+        if (state.turn < 4) {
+            loadTurn(state.turn + 1);
+        } else {
+            showEndScreen();
+        }
+    });
+
+    // End Screen Display
+    function showEndScreen() {
+        stopTurnTimer();
+        mainTopBar.style.display = 'none';
+        gameplayView.style.display = 'none';
+        endScreen.classList.add('active');
+
+        playSound('fanfare');
+        spawnExplosion(window.innerWidth * 0.25, window.innerHeight * 0.3, ['#f43f5e', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'], 60);
+        setTimeout(() => {
+            spawnExplosion(window.innerWidth * 0.75, window.innerHeight * 0.3, ['#f43f5e', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'], 60);
+        }, 200);
+
+        const paraEl = document.getElementById('finalParagraphText');
+        paraEl.innerHTML = state.storyParts.map((part, idx) => {
+            const t = STUDENT_THEMES[idx];
+            return `<span class="final-chunk" style="background:${t.tintBg}; color:${t.tintText};">${part}</span>`;
+        }).join(' ');
+
+        const legendEl = document.getElementById('studentLegend');
+        legendEl.innerHTML = state.students.map((name, idx) => {
+            const t = STUDENT_THEMES[idx];
+            return `<span class="legend-tag" style="background:${t.tintBg}; color:${t.tintText};">
+                <span style="width:8px;height:8px;border-radius:50%;background:${t.main};display:inline-block;"></span>
+                ${idx + 1}. ${name}
+            </span>`;
+        }).join('');
+    }
+
+    // Toggle Color Highlights on End Screen
+    const highlightToggleBtn = document.getElementById('highlightToggleBtn');
+    highlightToggleBtn.addEventListener('click', () => {
+        state.highlightColors = !state.highlightColors;
+        const paraEl = document.getElementById('finalParagraphText');
+        paraEl.classList.toggle('plain-mode', !state.highlightColors);
+        highlightToggleBtn.textContent = state.highlightColors ? '🎨 Colors: ON' : '📖 Plain Text';
+    });
+
+    // Text-to-Speech Read Aloud
+    document.getElementById('readAloudBtn').addEventListener('click', () => {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const msg = new SpeechSynthesisUtterance(state.storyParts.join(' '));
+            msg.rate = 0.95;
+            msg.pitch = 1.05;
+            window.speechSynthesis.speak(msg);
+        }
+    });
+
+    // Copy Completed Paragraph to Clipboard
+    const copyTextBtn = document.getElementById('copyTextBtn');
+    copyTextBtn.addEventListener('click', () => {
+        const fullText = state.storyParts.join(' ');
+        const tempArea = document.createElement('textarea');
+        tempArea.value = fullText;
+        tempArea.style.position = 'fixed';
+        tempArea.style.opacity = '0';
+        document.body.appendChild(tempArea);
+        tempArea.select();
+        try {
+            document.execCommand('copy');
+            copyTextBtn.innerHTML = '<span>✅</span><span>Copied!</span>';
+            setTimeout(() => {
+                copyTextBtn.innerHTML = '<span>📋</span><span>Copy Text</span>';
+            }, 1800);
+        } catch (e) {}
+        document.body.removeChild(tempArea);
+    });
+
+    // Replay Same Story Button
+    document.getElementById('playAgainSameBtn').addEventListener('click', () => {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        endScreen.classList.remove('active');
+        mainTopBar.style.display = 'flex';
+        gameplayView.style.display = 'flex';
+        loadTurn(0);
+        playSound('next');
+    });
+
+    // New Story Button (Cycles to next built-in story and restarts)
+    document.getElementById('newStoryBtn').addEventListener('click', () => {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        state.storyIndex = (state.storyIndex + 1) % BUILTIN_STORIES.length;
+        state.storyParts = [...BUILTIN_STORIES[state.storyIndex].parts];
+
+        endScreen.classList.remove('active');
+        mainTopBar.style.display = 'flex';
+        gameplayView.style.display = 'flex';
+        loadTurn(0);
+        playSound('next');
+    });
+
+    // Sound Mute Toggle
+    document.getElementById('soundBtn').addEventListener('click', () => {
+        state.soundOn = !state.soundOn;
+        document.getElementById('soundIcon').textContent = state.soundOn ? '🔊' : '🔇';
+        if (state.soundOn) playSound('next');
+    });
+
+    // TEACHER SETUP MODAL LOGIC
+    const setupModal = document.getElementById('setupModal');
+    const storySelect = document.getElementById('storySelect');
+    const storyPartsInputs = document.getElementById('storyPartsInputs');
+    const studentNameInputs = document.getElementById('studentNameInputs');
+
+    function populateSetupModal() {
+        // Sync difficulty & timer dropdowns
+        document.getElementById('difficultySelect').value = state.difficulty;
+        document.getElementById('timeLimitSelect').value = String(state.turnDuration);
+
+        // Populate dropdown
+        storySelect.innerHTML = BUILTIN_STORIES.map((s, idx) =>
+            `<option value="${idx}" ${idx === state.storyIndex ? 'selected' : ''}>${s.title}</option>`
+        ).join('') + `<option value="custom" ${state.storyIndex === -1 ? 'selected' : ''}>✏️ Custom Story</option>`;
+
+        // Populate 5 story part inputs
+        storyPartsInputs.innerHTML = state.storyParts.map((part, idx) => `
+            <div class="setup-row">
+                <span class="dot-num" style="background:${STUDENT_THEMES[idx].main};">${idx + 1}</span>
+                <input type="text" class="text-input" id="partInput${idx}" value="${part.replace(/"/g, '&quot;')}" placeholder="Part ${idx + 1} words...">
+            </div>
+        `).join('');
+
+        // Populate 5 student name inputs
+        studentNameInputs.innerHTML = state.students.map((name, idx) => `
+            <div class="setup-row">
+                <span class="dot-num" style="background:${STUDENT_THEMES[idx].main};">${idx + 1}</span>
+                <input type="text" class="text-input" id="nameInput${idx}" value="${name.replace(/"/g, '&quot;')}" maxlength="20" placeholder="Student ${idx + 1}">
+            </div>
+        `).join('');
+    }
+
+    storySelect.addEventListener('change', () => {
+        const val = storySelect.value;
+        if (val !== 'custom') {
+            const chosen = BUILTIN_STORIES[Number(val)];
+            chosen.parts.forEach((p, idx) => {
+                document.getElementById(`partInput${idx}`).value = p;
+            });
+        }
+    });
+
+    function openModal() {
+        populateSetupModal();
+        setupModal.classList.add('open');
+    }
+
+    document.getElementById('openSetupBtn').addEventListener('click', openModal);
+    document.getElementById('teacherEditEndBtn').addEventListener('click', openModal);
+    document.getElementById('closeSetupBtn').addEventListener('click', () => {
+        setupModal.classList.remove('open');
+    });
+
+    document.getElementById('saveSetupBtn').addEventListener('click', () => {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+        state.difficulty = document.getElementById('difficultySelect').value;
+        state.turnDuration = Number(document.getElementById('timeLimitSelect').value) || 10;
+
+        const selVal = storySelect.value;
+        state.storyIndex = selVal === 'custom' ? -1 : Number(selVal);
+
+        for (let i = 0; i < 5; i++) {
+            const pVal = document.getElementById(`partInput${i}`).value.trim();
+            state.storyParts[i] = pVal || BUILTIN_STORIES[0].parts[i];
+
+            const nVal = document.getElementById(`nameInput${i}`).value.trim();
+            state.students[i] = nVal || `Student ${i + 1}`;
+        }
+
+        setupModal.classList.remove('open');
+        endScreen.classList.remove('active');
+        mainTopBar.style.display = 'flex';
+        gameplayView.style.display = 'flex';
+        loadTurn(0);
+        playSound('next');
+    });
+
+    // Start Round 1 on load
+    window.addEventListener('load', () => {
+        resizeCanvas();
+        loadTurn(0);
+    });
+</script>
+</body>
+</html>

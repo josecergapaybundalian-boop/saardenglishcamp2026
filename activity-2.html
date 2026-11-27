@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superhero Vault - Photos & Catchphrases</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0b0f19',
+                        cardBg: '#131b2e',
+                    },
+                    fontFamily: {
+                        comic: ['Impact', 'Arial Black', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hero-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .hero-card:hover {
+            transform: translateY(-6px) scale(1.02);
+        }
+        .text-glow {
+            text-shadow: 0 0 12px currentColor;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-slate-100 min-h-screen font-sans antialiased selection:bg-blue-600 selection:text-white flex flex-col justify-between">
+
+    <!-- Header Section -->
+    <header class="sticky top-0 z-30 bg-darkBg/95 backdrop-blur-md border-b border-slate-800 px-4 py-4 sm:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                    <i class="fa-solid fa-mask text-xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-wider uppercase font-comic bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-500 bg-clip-text text-transparent">
+                        SUPERHERO VAULT
+                    </h1>
+                    <p class="text-xs text-slate-400">Marvel, DC &amp; Image Superheroes with Photos &amp; Voice</p>
+                </div>
+            </div>
+
+            <!-- Search & Audio Controls -->
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <div class="relative flex-1 md:w-72">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="searchInput" placeholder="Search hero, universe, quote..." 
+                           class="w-full pl-10 pr-4 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-slate-200 placeholder-slate-500">
+                </div>
+                <button id="voiceToggleBtn" title="Audio Enabled" class="p-2.5 bg-slate-800 border border-slate-700 rounded-xl text-blue-400 hover:bg-slate-700 transition">
+                    <i class="fa-solid fa-volume-high text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6 sm:px-8 flex-grow w-full">
+        <!-- Universe Filter Tabs -->
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div id="universeTabs" class="flex flex-wrap items-center gap-2">
+                <button data-universe="All" class="universe-tab active px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-600 text-white shadow-md shadow-blue-500/30 transition">
+                    All Heroes (20)
+                </button>
+                <button data-universe="Marvel" class="universe-tab px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-800/80 text-slate-300 hover:bg-slate-700 border border-slate-700 transition">
+                    Marvel
+                </button>
+                <button data-universe="DC" class="universe-tab px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-800/80 text-slate-300 hover:bg-slate-700 border border-slate-700 transition">
+                    DC Comics
+                </button>
+                <button data-universe="Other" class="universe-tab px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-800/80 text-slate-300 hover:bg-slate-700 border border-slate-700 transition">
+                    Image / Dark Horse
+                </button>
+            </div>
+            <span id="heroCountLabel" class="text-xs text-slate-400 font-medium">Showing 20 iconic heroes</span>
+        </div>
+
+        <!-- Hero Card Grid -->
+        <div id="heroGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <!-- Dynamically injected superhero cards -->
+        </div>
+
+        <!-- Fallback No Results -->
+        <div id="noResults" class="hidden text-center py-20">
+            <i class="fa-solid fa-user-ninja text-6xl text-slate-700 mb-4 animate-bounce"></i>
+            <h3 class="text-xl font-bold text-slate-400">No Superheroes Found</h3>
+            <p class="text-sm text-slate-600 mt-1">Try adjusting your search query or universe filter.</p>
+        </div>
+    </main>
+
+    <!-- Superhero Modal -->
+    <div id="heroModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="modalContainer" class="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 relative flex flex-col md:flex-row">
+            
+            <!-- Close Button -->
+            <button id="closeModalBtn" class="absolute top-4 right-4 z-20 w-10 h-10 bg-slate-950/70 hover:bg-slate-800 text-slate-300 hover:text-white rounded-full flex items-center justify-center backdrop-blur-md transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Modal Left: Full Hero Photo -->
+            <div class="md:w-1/2 p-4 flex items-center justify-center relative overflow-hidden bg-slate-950 min-h-[300px]">
+                <img id="modalImg" src="" alt="Superhero Photo" class="w-full h-full object-contain rounded-2xl shadow-xl max-h-[360px]" onerror="this.onerror=null;this.src='https://placehold.co/400x400/1e293b/ffffff?text=Hero+Photo';">
+                <div id="modalGlow" class="absolute inset-0 opacity-20 blur-3xl pointer-events-none"></div>
+            </div>
+
+            <!-- Modal Right: Hero Specs & Audio Catchphrase -->
+            <div class="md:w-1/2 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/95">
+                <div>
+                    <!-- Badges -->
+                    <div class="flex items-center justify-between gap-2 mb-2">
+                        <span id="modalRole" class="text-xs font-semibold uppercase tracking-widest px-2.5 py-1 rounded-md bg-slate-800 text-blue-400 border border-slate-700/50">
+                            HERO
+                        </span>
+                        <span id="modalOrigin" class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-slate-950 border border-slate-700 text-slate-300">
+                            Marvel
+                        </span>
+                    </div>
+
+                    <!-- Superhero Name -->
+                    <h2 id="modalName" class="text-3xl font-extrabold uppercase tracking-wide font-comic text-white mb-2">
+                        SPIDER-MAN
+                    </h2>
+
+                    <!-- Bio -->
+                    <p id="modalBio" class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-6">
+                        Hero description...
+                    </p>
+
+                    <!-- Quote Box -->
+                    <div class="relative bg-slate-950 border border-slate-800 rounded-2xl p-4 mb-6 shadow-inner">
+                        <i class="fa-solid fa-quote-left text-slate-700 text-xl absolute top-3 left-3 opacity-50"></i>
+                        <p id="modalCatchphrase" class="text-base sm:text-lg font-bold italic text-slate-100 pl-6 relative z-10 font-serif">
+                            "Catchphrase..."
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Voice Audio Button -->
+                <div class="space-y-2">
+                    <button id="speakBtn" class="w-full py-3 px-5 rounded-xl font-bold uppercase tracking-wider text-sm flex items-center justify-center gap-3 transition shadow-lg text-white transform active:scale-95">
+                        <i class="fa-solid fa-volume-high text-lg animate-pulse"></i>
+                        <span>Speak Catchphrase</span>
+                    </button>
+                    <p class="text-[11px] text-center text-slate-500 flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Voice Synthesis Active
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 bg-slate-950/60 py-4 px-6 text-center text-xs text-slate-500">
+        <p>Superhero Vault &copy; Interactive Character Gallery &amp; Voice Audio Synthesizer. Character portraits: Superhero API (akabab).</p>
+    </footer>
+
+    <!-- JavaScript Application Code -->
+    <script>
+        // 20 Superheroes with reliable direct public domain / Wikimedia high-res character photo URLs and custom voice profiles
+        const heroes = [
+            {
+                id: 'spider-man',
+                name: 'Spider-Man',
+                universe: 'Marvel',
+                publisherLabel: 'Marvel Comics',
+                role: 'Web-Slinger',
+                color: '#ef4444',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/2/21/Web_of_Spider-Man_Vol_1_1.png',
+                catchphrase: "With great power comes great responsibility!",
+                bio: "Bitten by a radioactive spider, Peter Parker protects New York City with web-shooters, agility, and heroic heart.",
+                voicePitch: 1.25,
+                voiceRate: 1.12
+            },
+            {
+                id: 'iron-man',
+                name: 'Iron Man',
+                universe: 'Marvel',
+                publisherLabel: 'Marvel Comics',
+                role: 'Armored Avenger',
+                color: '#f59e0b',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/4/47/Iron_Man_%28circa_2018%29.png',
+                catchphrase: "I am Iron Man!",
+                bio: "Genius billionaire Tony Stark constructs high-tech arc-reactor powered armors to protect humanity against global threats.",
+                voicePitch: 0.88,
+                voiceRate: 1.02
+            },
+            {
+                id: 'captain-america',
+                name: 'Captain America',
+                universe: 'Marvel',
+                publisherLabel: 'Marvel Comics',
+                role: 'First Avenger',
+                color: '#3b82f6',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/3/3d/Captain_America_infobox.jpg',
+                catchphrase: "I can do this all day!",
+                bio: "Super-Soldier Steve Rogers embodies courage and duty, leading heroes into battle with his indestructible Vibranium shield.",
+                voicePitch: 0.85,
+                voiceRate: 0.96
+            },
+            {
+                id: 'thor',
+                name: 'Thor',
+                universe: 'Marvel',
+                publisherLabel: 'Marvel Comics',
+                role: 'God of Thunder',
+                color: '#38bdf8',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/3/3c/Chris_Hemsworth_as_Thor_in_Thor_The_Dark_World.jpg',
+                catchphrase: "For Asgard!",
+                bio: "Prince of Asgard and wielder of Mjolnir, Thor commands cosmic storms and lightning against evil.",
+                voicePitch: 0.65,
+                voiceRate: 0.92
+            },
+            {
+                id: 'hulk',
+                name: 'Hulk',
+                universe: 'Marvel',
+                publisherLabel: 'Marvel Comics',
+                role: 'Gamma Goliath',
+                color: '#22c55e',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/a/aa/Hulk_%28Marvel_comics%29.png',
+                catchphrase: "Hulk SMASH!",
+                bio: "Infused with gamma radiation, Bruce Banner transforms into a green behemoth of limitless physical strength when angered.",
+                voicePitch: 0.28,
+                voiceRate: 0.78
+            },
+            {
+                id: 'black-panther',
+                name: 'Black Panther',
+                universe: 'Marvel',
+                publisherLabel: 'Marvel Comics',
+                role: 'King of Wakanda',
+                color: '#a855f7',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/9/9f/Black_Panther_OS_Vol_1_2.png',
+                catchphrase: "Wakanda Forever!",
+                bio: "King T'Challa guards Wakanda clad in kinetic Vibranium armor, possessing superhuman reflexes and wisdom.",
+                voicePitch: 0.72,
+                voiceRate: 0.94
+            },
+            {
+                id: 'wolverine',
+                name: 'Wolverine',
+                universe: 'Marvel',
+                publisherLabel: 'Marvel Comics',
+                role: 'Adamantium Mutant',
+                color: '#eab308',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/e/eb/Wolverine_%28Marvel_Comics_character%29.png',
+                catchphrase: "I'm the best there is at what I do!",
+                bio: "Mutant Logan wields razor-sharp Adamantium claws and rapid healing abilities, making him an indestructible force.",
+                voicePitch: 0.45,
+                voiceRate: 0.92
+            },
+            {
+                id: 'deadpool',
+                name: 'Deadpool',
+                universe: 'Marvel',
+                publisherLabel: 'Marvel Comics',
+                role: 'Merc with a Mouth',
+                color: '#f43f5e',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/a/b7/Deadpool_Vol_2_1_Textless.jpg',
+                catchphrase: "Maximum effort!",
+                bio: "Wade Wilson is a fourth-wall-breaking mercenary with wild humor, twin swords, and instant regeneration.",
+                voicePitch: 1.18,
+                voiceRate: 1.16
+            },
+            {
+                id: 'doctor-strange',
+                name: 'Doctor Strange',
+                universe: 'Marvel',
+                publisherLabel: 'Marvel Comics',
+                role: 'Sorcerer Supreme',
+                color: '#f97316',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/1/1e/Doctor_Strange_Vol_4_1.png',
+                catchphrase: "Dormammu, I've come to bargain!",
+                bio: "Master Stephen Strange manipulates magic, reality, and time to protect the multiverse from dark mystical forces.",
+                voicePitch: 0.76,
+                voiceRate: 0.94
+            },
+            {
+                id: 'black-widow',
+                name: 'Black Widow',
+                universe: 'Marvel',
+                publisherLabel: 'Marvel Comics',
+                role: 'Master Spy',
+                color: '#ef4444',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/f/f4/Black_Widow_%28Natasha_Romanova%29.png',
+                catchphrase: "I've got red in my ledger, I want to wipe it out.",
+                bio: "Natasha Romanoff is a master spy and deadly martial artist who tackles Earth's most dangerous covert missions.",
+                voicePitch: 1.15,
+                voiceRate: 1.04
+            },
+            {
+                id: 'scarlet-witch',
+                name: 'Scarlet Witch',
+                universe: 'Marvel',
+                publisherLabel: 'Marvel Comics',
+                role: 'Chaos Sorceress',
+                color: '#e11d48',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/7/7b/Scarlet_Witch_Vol_2_1.png',
+                catchphrase: "You took everything from me!",
+                bio: "Wanda Maximoff wields Chaos Magic capable of altering reality and manipulating energy across dimensions.",
+                voicePitch: 1.12,
+                voiceRate: 0.98
+            },
+            {
+                id: 'captain-marvel',
+                name: 'Captain Marvel',
+                universe: 'Marvel',
+                publisherLabel: 'Marvel Comics',
+                role: 'Cosmic Heroine',
+                color: '#f59e0b',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/d/dc/Captain_Marvel_Vol_10_1.png',
+                catchphrase: "Higher, further, faster, baby!",
+                bio: "Carol Danvers channels cosmic photon power, flying through deep space to protect worlds across galaxies.",
+                voicePitch: 1.1,
+                voiceRate: 1.08
+            },
+            {
+                id: 'batman',
+                name: 'Batman',
+                universe: 'DC',
+                publisherLabel: 'DC Comics',
+                role: 'The Dark Knight',
+                color: '#94a3b8',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/c/c7/Batman_Infobox.jpg',
+                catchphrase: "I am Vengeance! I am the Night! I am Batman!",
+                bio: "Bruce Wayne protects Gotham City using peak intellect, martial arts mastery, and cutting-edge tactical technology.",
+                voicePitch: 0.35,
+                voiceRate: 0.86
+            },
+            {
+                id: 'superman',
+                name: 'Superman',
+                universe: 'DC',
+                publisherLabel: 'DC Comics',
+                role: 'Man of Steel',
+                color: '#3b82f6',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/3/35/Supermanbis.png',
+                catchphrase: "Up, up, and away!",
+                bio: "Sent from Krypton, Kal-El possesses flight, invulnerability, and heat vision, serving as Earth's premier protector.",
+                voicePitch: 0.78,
+                voiceRate: 0.96
+            },
+            {
+                id: 'wonder-woman',
+                name: 'Wonder Woman',
+                universe: 'DC',
+                publisherLabel: 'DC Comics',
+                role: 'Amazon Warrior',
+                color: '#eab308',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/9/95/Wonder_Woman_infobox.jpg',
+                catchphrase: "By the gods, peace will prevail!",
+                bio: "Princess Diana of Themyscira combines Amazon warrior training, Lasso of Truth, and divine power to fight for justice.",
+                voicePitch: 1.05,
+                voiceRate: 0.96
+            },
+            {
+                id: 'the-flash',
+                name: 'The Flash',
+                universe: 'DC',
+                publisherLabel: 'DC Comics',
+                role: 'Scarlet Speedster',
+                color: '#ef4444',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/e/ed/The_Flash_Vol_5_1_Variant_Edition.jpg',
+                catchphrase: "My name is Barry Allen, and I'm the fastest man alive!",
+                bio: "Tapping into the Speed Force, Barry Allen runs faster than the speed of light to alter time and defeat evil.",
+                voicePitch: 1.24,
+                voiceRate: 1.24
+            },
+            {
+                id: 'aquaman',
+                name: 'Aquaman',
+                universe: 'DC',
+                publisherLabel: 'DC Comics',
+                role: 'King of Atlantis',
+                color: '#14b8a6',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/7/78/Aquaman_Vol_8_1.png',
+                catchphrase: "Permission to come aboard?",
+                bio: "Arthur Curry commands the depths of seven seas, marine life, and wields the Trident of Poseidon.",
+                voicePitch: 0.62,
+                voiceRate: 0.94
+            },
+            {
+                id: 'green-lantern',
+                name: 'Green Lantern',
+                universe: 'DC',
+                publisherLabel: 'DC Comics',
+                role: 'Emerald Knight',
+                color: '#22c55e',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/3/30/Green_Lantern_Vol_4_1.jpg',
+                catchphrase: "In brightest day, in blackest night, no evil shall escape my sight!",
+                bio: "Fueled by sheer willpower, Hal Jordan uses his Power Ring to manifest hard-light constructs across space.",
+                voicePitch: 0.92,
+                voiceRate: 1.0
+            },
+            {
+                id: 'hellboy',
+                name: 'Hellboy',
+                universe: 'Other',
+                publisherLabel: 'Dark Horse Comics',
+                role: 'Paranormal Investigator',
+                color: '#dc2626',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/b/b5/Hellboy_seeding_destruction_1.png',
+                catchphrase: "Aw, crap.",
+                bio: "Summoned to Earth as a demon child, Hellboy protects humanity against occult beasts with his stone Right Hand of Doom.",
+                voicePitch: 0.34,
+                voiceRate: 0.85
+            },
+            {
+                id: 'spawn',
+                name: 'Spawn',
+                universe: 'Other',
+                publisherLabel: 'Image Comics',
+                role: 'Hellspawn Anti-Hero',
+                color: '#10b981',
+                imgUrl: 'https://upload.wikimedia.org/wikipedia/en/8/8c/Spawn_1.png',
+                catchphrase: "Welcome to Hell!",
+                bio: "Al Simmons returned from the underworld as Spawn, wearing a sentient necroplasmic suit to battle demons and angels.",
+                voicePitch: 0.32,
+                voiceRate: 0.84
+            }
+        ];
+
+        // Load matching character portraits from the open-source Superhero API image library.
+        // This replaces the original comic-book cover URLs with individual character portraits.
+        async function loadHeroPortraits() {
+            const aliases = {
+                'the flash': ['flash'],
+                'doctor strange': ['doctor strange'],
+                'captain marvel': ['captain marvel'],
+                'spider-man': ['spider-man', 'spiderman'],
+                'black panther': ['black panther'],
+                'black widow': ['black widow'],
+                'scarlet witch': ['scarlet witch'],
+                'green lantern': ['green lantern'],
+                'hellboy': ['hellboy'],
+                'spawn': ['spawn']
+            };
+            const normalize = value => String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+            try {
+                const response = await fetch('https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/all.json', { cache: 'force-cache' });
+                if (!response.ok) throw new Error('Portrait library could not be reached');
+                const directory = await response.json();
+                heroes.forEach(hero => {
+                    const targetNames = aliases[hero.name.toLowerCase()] || [hero.name];
+                    let match = null;
+                    for (const target of targetNames) {
+                        match = directory.find(item => normalize(item.name) === normalize(target));
+                        if (match) break;
+                    }
+                    if (match && match.images) {
+                        hero.imgUrl = match.images.lg || match.images.md || match.images.sm || hero.imgUrl;
+                    }
+                });
+            } catch (error) {
+                console.warn('Using backup superhero images:', error);
+            }
+        }
+
+        // Global App State
+        let activeHero = null;
+        let selectedUniverse = 'All';
+        let isAudioMuted = false;
+
+        // Elements
+        const heroGrid = document.getElementById('heroGrid');
+        const searchInput = document.getElementById('searchInput');
+        const universeTabs = document.querySelectorAll('.universe-tab');
+        const heroCountLabel = document.getElementById('heroCountLabel');
+        const noResults = document.getElementById('noResults');
+        const heroModal = document.getElementById('heroModal');
+        const modalContainer = document.getElementById('modalContainer');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalImg = document.getElementById('modalImg');
+        const modalName = document.getElementById('modalName');
+        const modalRole = document.getElementById('modalRole');
+        const modalOrigin = document.getElementById('modalOrigin');
+        const modalBio = document.getElementById('modalBio');
+        const modalCatchphrase = document.getElementById('modalCatchphrase');
+        const modalGlow = document.getElementById('modalGlow');
+        const speakBtn = document.getElementById('speakBtn');
+        const voiceToggleBtn = document.getElementById('voiceToggleBtn');
+
+        // Helper for universe badge styling
+        function getUniverseBadgeStyle(universe) {
+            if (universe === 'Marvel') return 'bg-red-950/80 text-red-400 border-red-800/60';
+            if (universe === 'DC') return 'bg-blue-950/80 text-blue-400 border-blue-800/60';
+            return 'bg-emerald-950/80 text-emerald-400 border-emerald-800/60';
+        }
+
+        // Render Hero Grid Cards
+        function renderHeroes(list) {
+            heroGrid.innerHTML = '';
+            heroCountLabel.innerText = `Showing ${list.length} iconic ${list.length === 1 ? 'hero' : 'heroes'}`;
+
+            if (list.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            }
+            noResults.classList.add('hidden');
+
+            list.forEach(hero => {
+                const card = document.createElement('div');
+                card.className = `hero-card cursor-pointer bg-slate-900 border rounded-2xl overflow-hidden p-4 flex flex-col justify-between relative group hover:shadow-2xl transition-all duration-300`;
+                card.style.borderColor = `${hero.color}44`;
+
+                card.innerHTML = `
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none" style="background-color: ${hero.color}"></div>
+                    
+                    <div class="relative z-10 flex justify-between items-center mb-2">
+                        <span class="text-[10px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded-full border ${getUniverseBadgeStyle(hero.universe)}">
+                            ${hero.universe}
+                        </span>
+                        <span class="text-[10px] font-semibold text-slate-400">${hero.publisherLabel}</span>
+                    </div>
+
+                    <div class="relative z-10 flex flex-col items-center text-center">
+                        <!-- Superhero Photo -->
+                        <div class="w-36 h-44 mb-3 rounded-xl overflow-hidden border-2 border-slate-700 shadow-md transform group-hover:scale-105 transition-transform duration-300 bg-slate-950">
+                            <img src="${hero.imgUrl}" alt="${hero.name}" class="w-full h-full object-contain bg-slate-950" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/200x250/1e293b/ffffff?text=${encodeURIComponent(hero.name)}';">
+                        </div>
+                        
+                        <span class="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-800 text-slate-300 mb-1">
+                            ${hero.role}
+                        </span>
+
+                        <h3 class="text-xl font-black uppercase font-comic tracking-wide text-white group-hover:text-glow" style="color: ${hero.color}">
+                            ${hero.name}
+                        </h3>
+
+                        <p class="text-xs text-slate-400 italic line-clamp-2 mt-1">
+                            "${hero.catchphrase}"
+                        </p>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400 group-hover:text-slate-200">
+                        <span class="text-[11px] font-medium">Click for Photo &amp; Voice</span>
+                        <i class="fa-solid fa-volume-high text-sm" style="color: ${hero.color}"></i>
+                    </div>
+                `;
+
+                card.addEventListener('click', () => openModal(hero));
+                heroGrid.appendChild(card);
+            });
+        }
+
+        // Filter Heroes
+        function applyFilters() {
+            const query = searchInput.value.toLowerCase().trim();
+            const filtered = heroes.filter(hero => {
+                const matchesUniverse = (selectedUniverse === 'All' || hero.universe === selectedUniverse);
+                const matchesQuery = hero.name.toLowerCase().includes(query) ||
+                                     hero.role.toLowerCase().includes(query) ||
+                                     hero.publisherLabel.toLowerCase().includes(query) ||
+                                     hero.catchphrase.toLowerCase().includes(query) ||
+                                     hero.bio.toLowerCase().includes(query);
+                return matchesUniverse && matchesQuery;
+            });
+            renderHeroes(filtered);
+        }
+
+        // Character-specific voice direction.
+        // Speech voices are supplied by the visitor's browser/device, so exact actor
+        // voices cannot be guaranteed. The app selects the closest available English
+        // voice, then applies an individual pitch and pace for each character.
+        const voiceProfiles = {
+            'spider-man':       { gender: 'male',   hints: ['guy', 'tom', 'ryan', 'alex'], pitch: 1.22, rate: 1.13 },
+            'iron-man':         { gender: 'male',   hints: ['alex', 'daniel', 'david', 'guy'], pitch: 0.91, rate: 1.02 },
+            'captain-america':  { gender: 'male',   hints: ['david', 'james', 'mark', 'daniel'], pitch: 0.86, rate: 0.96 },
+            'thor':             { gender: 'male',   hints: ['daniel', 'david', 'james'], pitch: 0.68, rate: 0.91 },
+            'hulk':             { gender: 'male',   hints: ['daniel', 'david', 'james'], pitch: 0.48, rate: 0.80 },
+            'black-panther':    { gender: 'male',   hints: ['daniel', 'david', 'james'], pitch: 0.78, rate: 0.94 },
+            'wolverine':        { gender: 'male',   hints: ['daniel', 'david', 'james'], pitch: 0.62, rate: 0.91 },
+            'deadpool':         { gender: 'male',   hints: ['guy', 'alex', 'ryan'], pitch: 1.16, rate: 1.17 },
+            'doctor-strange':   { gender: 'male',   hints: ['daniel', 'david', 'james'], pitch: 0.82, rate: 0.94 },
+            'black-widow':      { gender: 'female', hints: ['samantha', 'zira', 'jenny', 'aria'], pitch: 1.08, rate: 1.02 },
+            'scarlet-witch':    { gender: 'female', hints: ['samantha', 'zira', 'jenny', 'aria'], pitch: 1.03, rate: 0.96 },
+            'captain-marvel':   { gender: 'female', hints: ['jenny', 'aria', 'samantha', 'zira'], pitch: 1.10, rate: 1.06 },
+            'batman':           { gender: 'male',   hints: ['daniel', 'david', 'james'], pitch: 0.55, rate: 0.87 },
+            'superman':         { gender: 'male',   hints: ['david', 'guy', 'james'], pitch: 0.88, rate: 0.97 },
+            'wonder-woman':     { gender: 'female', hints: ['samantha', 'aria', 'jenny', 'zira'], pitch: 1.02, rate: 0.97 },
+            'the-flash':        { gender: 'male',   hints: ['guy', 'alex', 'ryan'], pitch: 1.18, rate: 1.22 },
+            'aquaman':          { gender: 'male',   hints: ['daniel', 'david', 'james'], pitch: 0.72, rate: 0.94 },
+            'green-lantern':    { gender: 'male',   hints: ['david', 'guy', 'james'], pitch: 0.96, rate: 1.00 },
+            'hellboy':          { gender: 'male',   hints: ['daniel', 'david', 'james'], pitch: 0.57, rate: 0.86 },
+            'spawn':            { gender: 'male',   hints: ['daniel', 'david', 'james'], pitch: 0.43, rate: 0.84 }
+        };
+
+        function selectCharacterVoice(hero, voices) {
+            const profile = voiceProfiles[hero.id] || { gender: 'male', hints: [] };
+            const englishVoices = voices.filter(v => /^en([_-]|$)/i.test(v.lang || ''));
+            if (!englishVoices.length) return null;
+
+            const genderHints = profile.gender === 'female'
+                ? ['female', 'woman', 'samantha', 'zira', 'jenny', 'aria', 'karen', ' victoria']
+                : ['male', 'man', 'david', 'daniel', 'guy', 'mark', 'james', 'alex'];
+
+            const ranked = englishVoices.map((voice, index) => {
+                const name = (voice.name || '').toLowerCase();
+                let score = 0;
+                if (genderHints.some(h => name.includes(h.trim()))) score += 8;
+                profile.hints.forEach((hint, i) => {
+                    if (name.includes(hint)) score += 6 - i;
+                });
+                if (/natural|neural|premium|enhanced/i.test(name)) score += 3;
+                if (/google|microsoft|apple/i.test(name)) score += 1;
+                if (/en-us/i.test(voice.lang)) score += 1.5;
+                if (voice.default) score += 0.25;
+                return { voice, score, index };
+            }).sort((a, b) => b.score - a.score || a.index - b.index);
+
+            return ranked[0].voice;
+        }
+
+        function speakCatchphrase(hero) {
+            if (isAudioMuted || !('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+
+            const profile = voiceProfiles[hero.id] || { pitch: 1, rate: 1 };
+            const utterance = new SpeechSynthesisUtterance(hero.catchphrase);
+            utterance.lang = 'en-US';
+            utterance.pitch = profile.pitch;
+            utterance.rate = profile.rate;
+            utterance.volume = 1;
+
+            const voices = window.speechSynthesis.getVoices();
+            const characterVoice = selectCharacterVoice(hero, voices);
+            if (characterVoice) {
+                utterance.voice = characterVoice;
+                utterance.lang = characterVoice.lang;
+            }
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Some browsers load their voice list asynchronously. Refresh it when ready.
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+        }
+
+        // Play UI Sound Effect
+        function playSFX(type) {
+            if (isAudioMuted) return;
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'click') {
+                    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                } else if (type === 'close') {
+                    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                }
+            } catch(e) {
+                // AudioContext restricted in some iframes without gesture, safe fallback
+            }
+        }
+
+        // Open Hero Modal
+        function openModal(hero) {
+            activeHero = hero;
+            playSFX('click');
+
+            modalImg.src = hero.imgUrl;
+            modalName.innerText = hero.name;
+            modalName.style.color = hero.color;
+            modalRole.innerText = hero.role;
+            modalRole.style.color = hero.color;
+            modalRole.style.borderColor = `${hero.color}55`;
+            modalOrigin.innerText = hero.publisherLabel;
+            modalOrigin.className = `text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md border ${getUniverseBadgeStyle(hero.universe)}`;
+            modalBio.innerText = hero.bio;
+            modalCatchphrase.innerText = `"${hero.catchphrase}"`;
+            modalGlow.style.backgroundColor = hero.color;
+            speakBtn.style.backgroundColor = hero.color;
+            speakBtn.style.boxShadow = `0 8px 25px -4px ${hero.color}66`;
+
+            // Display Modal
+            heroModal.classList.remove('opacity-0', 'pointer-events-none');
+            modalContainer.classList.remove('scale-95');
+            modalContainer.classList.add('scale-100');
+
+            // Speak Catchphrase Audio automatically upon opening modal
+            setTimeout(() => speakCatchphrase(hero), 250);
+        }
+
+        // Close Modal
+        function closeModal() {
+            playSFX('close');
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+            heroModal.classList.add('opacity-0', 'pointer-events-none');
+            modalContainer.classList.remove('scale-100');
+            modalContainer.classList.add('scale-95');
+        }
+
+        // Event Listeners
+        closeModalBtn.addEventListener('click', closeModal);
+        heroModal.addEventListener('click', (e) => {
+            if (e.target === heroModal) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        speakBtn.addEventListener('click', () => {
+            if (activeHero) {
+                playSFX('click');
+                speakCatchphrase(activeHero);
+            }
+        });
+
+        voiceToggleBtn.addEventListener('click', () => {
+            isAudioMuted = !isAudioMuted;
+            if (isAudioMuted) {
+                window.speechSynthesis.cancel();
+                voiceToggleBtn.className = 'p-2.5 bg-slate-800 border border-slate-700 rounded-xl text-slate-500 hover:bg-slate-700 transition';
+                voiceToggleBtn.innerHTML = '<i class="fa-solid fa-volume-xmark text-lg"></i>';
+                voiceToggleBtn.title = "Audio Muted";
+            } else {
+                voiceToggleBtn.className = 'p-2.5 bg-slate-800 border border-slate-700 rounded-xl text-blue-400 hover:bg-slate-700 transition';
+                voiceToggleBtn.innerHTML = '<i class="fa-solid fa-volume-high text-lg"></i>';
+                voiceToggleBtn.title = "Audio Enabled";
+            }
+        });
+
+        searchInput.addEventListener('input', applyFilters);
+
+        universeTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                universeTabs.forEach(t => {
+                    t.classList.remove('bg-blue-600', 'text-white', 'shadow-blue-500/30');
+                    t.classList.add('bg-slate-800/80', 'text-slate-300');
+                });
+                tab.classList.remove('bg-slate-800/80', 'text-slate-300');
+                tab.classList.add('bg-blue-600', 'text-white', 'shadow-blue-500/30');
+
+                selectedUniverse = tab.getAttribute('data-universe');
+                applyFilters();
+            });
+        });
+
+        // Load the device's available speech voices (some browsers load them asynchronously).
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.getVoices();
+            window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+        }
+
+        // Initial Page Render
+        window.onload = async () => {
+            await loadHeroPortraits();
+            renderHeroes(heroes);
+        };
+    </script>
+</body>
+</html>

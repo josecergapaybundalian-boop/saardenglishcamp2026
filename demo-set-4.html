@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SAARD ENGLISH CAMP 2026: Three-Stage Team Relay Challenge</title>
+  <style>
+    :root {
+      --bg-base: #f1f5f9;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --ink: #0f172a;
+      --ink-muted: #475569;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --indigo-deep: #1e1b4b;
+      --accent-amber: #f59e0b;
+      --accent-amber-light: #fef3c7;
+      --accent-emerald: #10b981;
+      --accent-emerald-light: #d1fae5;
+      --accent-red: #ef4444;
+      --accent-red-light: #fee2e2;
+      --accent-purple: #7c3aed;
+      --border: #cbd5e1;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 4px 10px -2px rgba(15, 23, 42, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #e0e7ff 0%, #f1f5f9 260px);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+    }
+
+    /* Header Banner */
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #1d4ed8 100%);
+      color: #ffffff;
+      padding: 18px 20px;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.28);
+      border-bottom: 4px solid #fbbf24;
+    }
+
+    .header-inner {
+      max-width: 1340px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(251, 191, 36, 0.2);
+      border: 1px solid rgba(251, 191, 36, 0.6);
+      color: #fde68a;
+      font-weight: 800;
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+    }
+
+    header h1 {
+      font-size: clamp(1.25rem, 2.5vw, 1.85rem);
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    header .subtitle {
+      font-size: 0.92rem;
+      color: #dbeafe;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .header-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(6px);
+      padding: 8px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    /* Buttons */
+    .btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 13px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.12s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+      user-select: none;
+    }
+
+    .btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    .btn:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-glass {
+      background: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+    .btn-glass:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.26);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3);
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-dark);
+    }
+
+    .btn-amber {
+      background: #fbbf24;
+      color: #1e1b4b;
+    }
+    .btn-amber:hover:not(:disabled) {
+      background: #f59e0b;
+    }
+
+    .btn-emerald {
+      background: var(--accent-emerald);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+    }
+    .btn-emerald:hover:not(:disabled) {
+      background: #059669;
+    }
+
+    .btn-red {
+      background: var(--accent-red);
+      color: #ffffff;
+    }
+    .btn-red:hover:not(:disabled) {
+      background: #dc2626;
+    }
+
+    .btn-outline {
+      background: #ffffff;
+      color: var(--ink);
+      border: 1.5px solid var(--border);
+    }
+    .btn-outline:hover:not(:disabled) {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1340px;
+      width: 100%;
+      margin: 18px auto;
+      padding: 0 16px 32px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* 5 Navigation Tabs */
+    .tabs-nav {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      padding: 8px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+
+    @media (max-width: 960px) {
+      .tabs-nav {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .tabs-nav button:last-child {
+        grid-column: span 2;
+      }
+    }
+
+    .tab-btn {
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      background: transparent;
+      color: var(--ink-muted);
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 0.86rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: all 0.18s ease;
+      text-align: center;
+    }
+
+    .tab-btn:hover {
+      background: #eff6ff;
+      color: var(--primary);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.28);
+    }
+
+    /* Timeline Scrubber Bar */
+    .timeline-panel {
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pill-tag {
+      background: #e0e7ff;
+      color: #1e3a8a;
+      font-weight: 800;
+      font-size: 0.78rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    input[type="range"].timeline-slider {
+      flex: 1;
+      min-width: 180px;
+      accent-color: var(--primary);
+      height: 8px;
+      cursor: pointer;
+    }
+
+    /* Workspace Grid */
+    .workspace {
+      display: grid;
+      grid-template-columns: 1.42fr 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    @media (max-width: 980px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    .card-header {
+      background: var(--surface-soft);
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .card-header h2 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Canvas Stage */
+    .canvas-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      min-height: 360px;
+      background: #0f172a;
+    }
+
+    canvas#relayCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .stage-toolbar {
+      padding: 12px 16px;
+      background: #f8fafc;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    /* Right Side Panel */
+    .side-panel {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 760px;
+      overflow-y: auto;
+    }
+
+    .section-heading {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: #1e3a8a;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .general-rule-banner {
+      background: #fffbeb;
+      border: 1.5px solid #fcd34d;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.84rem;
+      color: #78350f;
+    }
+
+    /* Step Cards */
+    .step-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .step-item {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1.5px solid #e2e8f0;
+      background: #f8fafc;
+      transition: all 0.2s ease;
+      font-size: 0.86rem;
+    }
+
+    .step-item.active {
+      background: #eff6ff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+      transform: translateX(3px);
+    }
+
+    .step-badge {
+      display: inline-block;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 0.73rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-right: 6px;
+    }
+
+    /* Checklists */
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1.5px solid #e2e8f0;
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: background 0.15s;
+    }
+
+    .check-row:hover {
+      background: #f0fdf4;
+    }
+
+    .check-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--accent-emerald);
+      cursor: pointer;
+    }
+
+    .check-row.done span {
+      text-decoration: line-through;
+      color: #64748b;
+    }
+
+    /* Safety Rule Cards */
+    .safety-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1.5px solid #fecaca;
+      background: #fef2f2;
+      font-size: 0.84rem;
+      color: #7f1d1d;
+    }
+
+    .safety-icon {
+      font-size: 1.15rem;
+      line-height: 1.2;
+      flex-shrink: 0;
+    }
+
+    /* Win Banner */
+    .win-banner {
+      background: linear-gradient(135deg, #1d4ed8, #4f46e5);
+      color: #ffffff;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+    }
+
+    /* Readiness Meter */
+    .readiness-box {
+      background: #f0fdf4;
+      border: 1.5px solid #86efac;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .meter-track {
+      width: 100%;
+      height: 12px;
+      background: #dcfce7;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 8px 0;
+      border: 1px solid #86efac;
+    }
+
+    .meter-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #059669);
+      transition: width 0.25s ease;
+    }
+
+    /* Score Pill Counter */
+    .counter-pill {
+      background: #0f172a;
+      color: #38bdf8;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-weight: 800;
+      font-size: 0.86rem;
+      padding: 5px 11px;
+      border-radius: 10px;
+      border: 1.5px solid #334155;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div>
+        <div class="brand-badge">🏆 SAARD ENGLISH CAMP 2026 • TEAM RELAY ACTIVITY</div>
+        <h1>Three-Stage Team Relay Challenge</h1>
+        <div class="subtitle">📅 November 28–29, 2026 • Sequential Teamwork, Coordination &amp; Fair Play</div>
+      </div>
+
+      <!-- GLOBAL PLAYBACK & AUDIO CONTROLS -->
+      <div class="header-controls">
+        <button id="btnPlayPause" class="btn btn-amber" onclick="togglePlay()">
+          <span id="playIcon">⏸️</span> <span id="playText">Pause</span>
+        </button>
+        <button class="btn btn-glass" onclick="replayStage()">🔄 Replay</button>
+        <button id="btnSpeed" class="btn btn-glass" onclick="cycleSpeed()">⚡ 1x</button>
+        <button id="btnMute" class="btn btn-glass" onclick="toggleMute()">🔊 Sound ON</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <div class="container">
+
+    <!-- 5 NAVIGATION TABS -->
+    <nav class="tabs-nav" aria-label="Relay Stages">
+      <button class="tab-btn active" data-tab="0" onclick="selectTab(0)">🏟️ Overview &amp; Setup</button>
+      <button class="tab-btn" data-tab="1" onclick="selectTab(1)">🏓 Stage 1: Ball Pass &amp; Shoot</button>
+      <button class="tab-btn" data-tab="2" onclick="selectTab(2)">🥤 Stage 2: L-Straw Rubber-Band Pass</button>
+      <button class="tab-btn" data-tab="3" onclick="selectTab(3)">⭕ Stage 3: Hula-Hoop &amp; Bell</button>
+      <button class="tab-btn" data-tab="4" onclick="selectTab(4)">🛡️ Rules, Safety &amp; Proctor Check</button>
+    </nav>
+
+    <!-- SYNCHRONIZED TIMELINE SCRUBBER -->
+    <div class="timeline-panel">
+      <span class="pill-tag" id="stageTag">OVERVIEW &amp; SETUP</span>
+      <input type="range" id="timelineSlider" class="timeline-slider" min="0" max="100" value="0" oninput="scrubTimeline(this.value)" />
+      <span class="pill-tag" id="progressPct">0%</span>
+      <span style="font-size:0.84rem; font-weight:700; color:#1e293b;" id="phaseCaption">Arena Lanes &amp; Materials Ready</span>
+    </div>
+
+    <!-- MAIN WORKSPACE -->
+    <div class="workspace">
+
+      <!-- LEFT: INTERACTIVE HTML5 ANIMATION CANVAS -->
+      <section class="card">
+        <div class="card-header">
+          <h2 id="canvasTitle">🏟️ Three-Stage Relay Lane Layout &amp; Preparation</h2>
+          <span class="pill-tag" id="statusBadge">7 Preparation Steps</span>
+        </div>
+
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="relayCanvas"></canvas>
+        </div>
+
+        <!-- CONTEXTUAL INTERACTIVE TOOLBAR -->
+        <div class="stage-toolbar" id="stageToolbar">
+          <!-- Populated dynamically per tab -->
+        </div>
+      </section>
+
+      <!-- RIGHT: SYNCHRONIZED STEP GUIDE & INTERACTIVE CHECKLISTS -->
+      <aside class="card side-panel" id="sidePanel">
+        <!-- Populated dynamically per tab -->
+      </aside>
+
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // DATA MODEL (Strictly aligned with SET 4 - TEAM BUILDING STYLE.pdf)
+    // =========================================================================
+    const MATERIALS_NEEDED = [
+      { item: "Ping-pong balls (3 per team)", purpose: "Stage 1 – ball-passing and cup-shooting", checked: true },
+      { item: "U-shaped paper channels", purpose: "Stage 1 – transfer the ping-pong balls", checked: true },
+      { item: "Target cup(s)", purpose: "Stage 1 – shooting target", checked: true },
+      { item: "L-shaped straws", purpose: "Stage 2 – transfer tool", checked: false },
+      { item: "Rubber band(s)", purpose: "Stage 2 – item to be passed", checked: false },
+      { item: "Hula hoop(s)", purpose: "Stage 3 – relay equipment", checked: false },
+      { item: "Chair(s) and bell(s)", purpose: "Stage 3 – turning point and signal", checked: false },
+      { item: "Masking tape or cones", purpose: "Mark lanes and start/finish lines", checked: true }
+    ];
+
+    const PREPARATION_STEPS = [
+      "Divide students into groups with an equal or nearly equal number of members.",
+      "Arrange each group in a line behind its starting line.",
+      "Set up the three stages in order and mark a clear lane for each group.",
+      "Place the target cup at the agreed shooting distance and prepare three ping-pong balls per team.",
+      "Prepare the L-shaped straws and rubber bands for Stage 2.",
+      "Place a chair and a bell at the Stage 3 turning point.",
+      "Demonstrate each task and show how equipment must be passed."
+    ];
+
+    const SAFETY_RULES = [
+      { icon: "🚦", text: "Wait for the proctor's starting signal before beginning." },
+      { icon: "🛣️", text: "Stay in your team's lane and pass equipment only to the next teammate." },
+      { icon: "🚫", text: "Do not throw equipment at others or interfere with another team." },
+      { icon: "🤲", text: "If a ping-pong ball or rubber band falls, retrieve it safely and continue as instructed." },
+      { icon: "⚠️", text: "Do not put straws in your mouth or point them toward anyone's face." },
+      { icon: "🏃", text: "Run carefully around the chair. Do not push, block, or collide with other students." },
+      { icon: "🧹", text: "Keep the area around the chair and bell clear of obstacles." },
+      { icon: "⏸️", text: "The proctor may pause the game if the playing area becomes unsafe." }
+    ];
+
+    const PROCTOR_FINAL_CHECK = [
+      { text: "Demonstrate how to pass the ping-pong ball using the U-shaped paper.", checked: true },
+      { text: "Confirm that each team must score three ping-pong balls into the cup.", checked: true },
+      { text: "Demonstrate exactly how to transfer the rubber band using the L-shaped straw.", checked: true },
+      { text: "Confirm that every student must take a turn in the hula-hoop and bell relay.", checked: false },
+      { text: "Make the start and finish lines clear and explain how the winner will be confirmed.", checked: false }
+    ];
+
+    // =========================================================================
+    // APPLICATION STATE
+    // =========================================================================
+    const state = {
+      activeTab: 0,
+      isPlaying: true,
+      speed: 1,
+      muted: false,
+      progress: 0, // 0 to 100
+      lastTime: 0,
+      loopDurationMs: 14000,
+
+      // Stage 1 State (3 balls to score + optional miss simulation)
+      stage1BallsScored: 0,
+      stage1SimulateMiss: false,
+      stage1LastBallIndex: -1,
+
+      // Stage 2 State (Rubber band passing along 4 students)
+      stage2PassIndex: 0, // 0 -> 1 -> 2 -> 3
+
+      // Stage 3 State (Hula hoop & bell turn per student 0..3)
+      stage3TurnIndex: 0,
+      stage3BellRangThisTurn: false,
+      stage3AllFinished: false,
+
+      // Sound trigger guards so tones don't repeat every frame
+      lastSoundMilestone: ""
+    };
+
+    // =========================================================================
+    // WEB AUDIO API SOUND EFFECTS (Zero External URLs)
+    // =========================================================================
+    let audioCtx = null;
+
+    function playSound(type) {
+      if (state.muted) return;
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === "cup") {
+          // Cheerful ping-pong drop in cup chime
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(587.33, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.14);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+          osc.start(now);
+          osc.stop(now + 0.22);
+        } else if (type === "miss") {
+          // Gentle bounce boing
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(180, now + 0.18);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        } else if (type === "pass") {
+          // Quick crisp transfer pop
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.exponentialRampToValueAtTime(660, now + 0.08);
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+          osc.start(now);
+          osc.stop(now + 0.1);
+        } else if (type === "bell") {
+          // Metallic brass bell ring
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(1318.5, now); // E6
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
+          osc.start(now);
+          osc.stop(now + 0.65);
+
+          const overtone = audioCtx.createOscillator();
+          const overGain = audioCtx.createGain();
+          overtone.type = "triangle";
+          overtone.frequency.setValueAtTime(2637, now); // E7
+          overGain.gain.setValueAtTime(0.08, now);
+          overGain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+          overtone.connect(overGain);
+          overGain.connect(audioCtx.destination);
+          overtone.start(now);
+          overtone.stop(now + 0.4);
+        } else if (type === "win") {
+          const notes = [523.25, 659.25, 783.99, 1046.5];
+          notes.forEach((f, idx) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.type = "triangle";
+            o.frequency.setValueAtTime(f, now + idx * 0.1);
+            g.gain.setValueAtTime(0.14, now + idx * 0.1);
+            g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.1 + 0.25);
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            o.start(now + idx * 0.1);
+            o.stop(now + idx * 0.1 + 0.25);
+          });
+        }
+      } catch (e) {
+        // Ignore if audio context is blocked
+      }
+    }
+
+    function toggleMute() {
+      state.muted = !state.muted;
+      document.getElementById("btnMute").textContent = state.muted ? "🔇 Muted" : "🔊 Sound ON";
+    }
+
+    // =========================================================================
+    // CANVAS RESIZE & SETUP
+    // =========================================================================
+    const canvas = document.getElementById("relayCanvas");
+    const ctx = canvas.getContext("2d");
+    const canvasWrap = document.getElementById("canvasWrap");
+
+    function resizeCanvas() {
+      const rect = canvasWrap.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.max(320, Math.floor(rect.width * dpr));
+      canvas.height = Math.max(220, Math.floor(rect.height * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    window.addEventListener("resize", resizeCanvas);
+
+    // =========================================================================
+    // TAB & PLAYBACK CONTROLS
+    // =========================================================================
+    function selectTab(index) {
+      state.activeTab = index;
+      state.progress = 0;
+      state.lastSoundMilestone = "";
+
+      if (index === 1) {
+        state.stage1BallsScored = 0;
+        state.stage1SimulateMiss = false;
+      } else if (index === 2) {
+        state.stage2PassIndex = 0;
+      } else if (index === 3) {
+        state.stage3TurnIndex = 0;
+        state.stage3BellRangThisTurn = false;
+        state.stage3AllFinished = false;
+      }
+
+      document.querySelectorAll(".tab-btn").forEach((btn, idx) => {
+        btn.classList.toggle("active", idx === index);
+      });
+
+      renderStageToolbar();
+      renderSidePanel();
+      updateTimelineUI();
+    }
+
+    function togglePlay() {
+      state.isPlaying = !state.isPlaying;
+      document.getElementById("playIcon").textContent = state.isPlaying ? "⏸️" : "▶️";
+      document.getElementById("playText").textContent = state.isPlaying ? "Pause" : "Play";
+    }
+
+    function replayStage() {
+      selectTab(state.activeTab);
+      if (!state.isPlaying) togglePlay();
+    }
+
+    function cycleSpeed() {
+      const speeds = [0.5, 1, 1.5];
+      state.speed = speeds[(speeds.indexOf(state.speed) + 1) % speeds.length];
+      document.getElementById("btnSpeed").textContent = `⚡ ${state.speed}x`;
+    }
+
+    function scrubTimeline(val) {
+      state.progress = parseFloat(val);
+      updateTimelineUI();
+    }
+
+    // Stage-Specific Interactive Controls
+    function triggerNextBall() {
+      state.stage1SimulateMiss = false;
+      if (state.stage1BallsScored >= 3) {
+        state.stage1BallsScored = 0;
+      }
+      state.progress = state.stage1BallsScored * 32 + 2;
+      if (!state.isPlaying) togglePlay();
+      renderStageToolbar();
+    }
+
+    function toggleMissDemo() {
+      state.stage1SimulateMiss = !state.stage1SimulateMiss;
+      if (state.stage1SimulateMiss) {
+        state.progress = 12;
+      }
+      if (!state.isPlaying) togglePlay();
+      renderStageToolbar();
+    }
+
+    function stepStrawPass() {
+      state.stage2PassIndex = (state.stage2PassIndex + 1) % 4;
+      state.progress = state.stage2PassIndex * 26 + 5;
+      playSound("pass");
+      renderStageToolbar();
+      renderSidePanel();
+    }
+
+    function triggerNextHulaTurn() {
+      state.stage3AllFinished = false;
+      state.stage3TurnIndex = (state.stage3TurnIndex + 1) % 4;
+      state.stage3BellRangThisTurn = false;
+      state.progress = state.stage3TurnIndex * 23 + 2;
+      if (!state.isPlaying) togglePlay();
+      renderStageToolbar();
+      renderSidePanel();
+    }
+
+    // =========================================================================
+    // SYNCHRONIZED TIMELINE & STEP HIGHLIGHTING
+    // =========================================================================
+    function updateTimelineUI() {
+      const pct = Math.round(state.progress);
+      document.getElementById("timelineSlider").value = state.progress;
+      document.getElementById("progressPct").textContent = `${pct}%`;
+
+      const stageTags = [
+        "OVERVIEW & SETUP",
+        "STAGE 1: BALL PASS & SHOOT",
+        "STAGE 2: L-STRAW PASS",
+        "STAGE 3: HULA-HOOP & BELL",
+        "RULES, SAFETY & CHECK"
+      ];
+      document.getElementById("stageTag").textContent = stageTags[state.activeTab];
+
+      const phase = getPhaseInfo();
+      document.getElementById("phaseCaption").textContent = phase.caption;
+
+      document.querySelectorAll(".step-item").forEach((el, idx) => {
+        el.classList.toggle("active", idx === phase.stepIdx);
+      });
+    }
+
+    function getPhaseInfo() {
+      const p = state.progress;
+      if (state.activeTab === 0) {
+        if (p < 35) return { stepIdx: 0, caption: "Prep 1–2: Equal Groups Behind Starting Line" };
+        if (p < 70) return { stepIdx: 1, caption: "Prep 3–5: Mark Lanes, Target Cups & L-Straws" };
+        return { stepIdx: 2, caption: "Prep 6–7: Chair & Bell Turning Point + Demo" };
+      }
+      if (state.activeTab === 1) {
+        if (p < 18) return { stepIdx: 0, caption: "Step 8: First Student Takes Ball & U-Channel" };
+        if (p < 50) return { stepIdx: 1, caption: "Step 9: Pass Ping-Pong Ball Along Paper Channels" };
+        if (p < 72) return { stepIdx: 2, caption: "Step 10: Guide & Shoot Ball into Target Cup" };
+        if (p < 88) return { stepIdx: 3, caption: "Step 11: Score 3 Balls (Safe Retrieve if Missed)" };
+        return { stepIdx: 4, caption: "Step 12: 3/3 Scored — Proceed to Stage 2!" };
+      }
+      if (state.activeTab === 2) {
+        if (p < 22) return { stepIdx: 0, caption: "Step 13: Hook Rubber Band on L-Shaped Straw (Hands Only)" };
+        if (p < 55) return { stepIdx: 1, caption: "Step 14: Transfer Rubber Band to Next L-Straw" };
+        if (p < 82) return { stepIdx: 2, caption: "Step 15: Continue Passing Down the Team Line" };
+        return { stepIdx: 3, caption: "Step 16: Reaches Final Student — Proceed to Stage 3!" };
+      }
+      if (state.activeTab === 3) {
+        if (p < 15) return { stepIdx: 0, caption: "Step 17: Take Hula Hoop & Wait for Signal" };
+        if (p < 42) return { stepIdx: 1, caption: "Step 18: Run Safely to Turning-Point Chair" };
+        if (p < 58) return { stepIdx: 2, caption: "Step 19: Ring the Bell at the Chair!" };
+        if (p < 82) return { stepIdx: 3, caption: "Step 20–21: Return & Pass Hula Hoop to Next Teammate" };
+        return { stepIdx: 4, caption: "Step 22: Every Member Completes Turn — Finish!" };
+      }
+      return { stepIdx: 0, caption: "How to Win & Proctor Final Verification" };
+    }
+
+    // =========================================================================
+    // CONTEXTUAL TOOLBAR (BELOW CANVAS)
+    // =========================================================================
+    function renderStageToolbar() {
+      const bar = document.getElementById("stageToolbar");
+      const title = document.getElementById("canvasTitle");
+      const badge = document.getElementById("statusBadge");
+
+      if (state.activeTab === 0) {
+        title.textContent = "🏟️ Three-Stage Relay Lane Layout & Preparation";
+        badge.textContent = "7 Preparation Steps";
+        bar.innerHTML = `
+          <span style="font-size:0.84rem; font-weight:600; color:#334155;">Teams line up behind the starting line in marked lanes before the proctor's signal.</span>
+          <button class="btn btn-primary" onclick="selectTab(1)">Start Stage 1 Demo ➡️</button>
+        `;
+      } else if (state.activeTab === 1) {
+        title.textContent = "🏓 Stage 1: Ping-Pong Ball Pass & Shoot";
+        badge.textContent = "Steps 8–12";
+        bar.innerHTML = `
+          <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
+            <div class="counter-pill">🏆 Cup Score: <span id="cupScoreDisplay">${state.stage1BallsScored} / 3</span></div>
+            <button class="btn btn-primary" onclick="triggerNextBall()">🏓 Shoot / Next Ball</button>
+            <button class="btn ${state.stage1SimulateMiss ? 'btn-red' : 'btn-outline'}" onclick="toggleMissDemo()">
+              ${state.stage1SimulateMiss ? '⚠️ Simulating Miss (Active)' : '🔄 Simulate Miss & Safe Retrieve'}
+            </button>
+          </div>
+          <button class="btn btn-emerald" onclick="selectTab(2)">Stage 2: L-Straw Pass ➡️</button>
+        `;
+      } else if (state.activeTab === 2) {
+        title.textContent = "🥤 Stage 2: L-Straw Rubber-Band Pass";
+        badge.textContent = "Steps 13–16";
+        bar.innerHTML = `
+          <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
+            <div class="counter-pill">🤝 Transfer: Player ${state.stage2PassIndex + 1} of 4</div>
+            <button class="btn btn-primary" onclick="stepStrawPass()">🥤 Practice Pass Step</button>
+            <span style="font-size:0.78rem; font-weight:700; color:#b91c1c;">⚠️ Hands Only — No Straws in Mouth!</span>
+          </div>
+          <button class="btn btn-emerald" onclick="selectTab(3)">Stage 3: Hula-Hoop &amp; Bell ➡️</button>
+        `;
+      } else if (state.activeTab === 3) {
+        title.textContent = "⭕ Stage 3: Hula-Hoop Run & Ring the Bell";
+        badge.textContent = "Steps 17–22";
+        bar.innerHTML = `
+          <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
+            <div class="counter-pill">🏃 Turn: Player ${state.stage3TurnIndex + 1} / 4 ${state.stage3AllFinished ? '✅ DONE!' : ''}</div>
+            <button class="btn btn-primary" onclick="triggerNextHulaTurn()">⭕ Next Teammate Turn</button>
+            <button class="btn btn-amber" onclick="playSound('bell')">🔔 Test Bell Sound</button>
+          </div>
+          <button class="btn btn-outline" onclick="selectTab(4)">🛡️ Rules &amp; Proctor Check ➡️</button>
+        `;
+      } else if (state.activeTab === 4) {
+        title.textContent = "🛡️ How to Win, Safety Rules & Proctor Check";
+        badge.textContent = "Official Guidelines";
+        const readyCount = PROCTOR_FINAL_CHECK.filter(c => c.checked).length;
+        bar.innerHTML = `
+          <span style="font-size:0.84rem; font-weight:700; color:#0f172a;">Proctor Final Check: ${readyCount} / ${PROCTOR_FINAL_CHECK.length} verified</span>
+          <button class="btn btn-emerald" onclick="verifyAllProctorChecks()">✅ Confirm All Ready &amp; Blow Whistle</button>
+        `;
+      }
+    }
+
+    // =========================================================================
+    // RIGHT SIDE PANEL RENDERER
+    // =========================================================================
+    function renderSidePanel() {
+      const panel = document.getElementById("sidePanel");
+
+      if (state.activeTab === 0) {
+        panel.innerHTML = `
+          <div class="section-heading"><span>📖 1. Activity Overview &amp; Objectives</span></div>
+          <p style="font-size:0.85rem; color:#334155;">
+            Students compete in groups by completing <strong>three relay stages in sequence</strong>. Team members take turns, pass required equipment to the next teammate, and work together. The first group to complete all three stages correctly is the winner!
+          </p>
+          <div class="general-rule-banner">
+            <strong>📌 General Rule:</strong> Teams must complete all three stages in order. Players take turns and pass equipment to the next teammate. <strong>No player may skip a teammate or stage.</strong> Begin only when the proctor gives the signal.
+          </div>
+          <div class="step-list">
+            <div class="step-item">
+              <span class="step-badge">2. Objectives</span>
+              <ul style="margin-top:5px; padding-left:18px; font-size:0.81rem; display:grid; gap:3px;">
+                <li>Develop teamwork, cooperation, and communication.</li>
+                <li>Practice hand-eye coordination and controlled movement.</li>
+                <li>Follow instructions and complete tasks in the correct order.</li>
+                <li>Demonstrate patience, fair play, and positive team spirit.</li>
+              </ul>
+            </div>
+            <div class="step-item">
+              <span class="step-badge">4. Preparation (1–7)</span>
+              <ol style="margin-top:5px; padding-left:18px; font-size:0.8rem; display:grid; gap:3px;">
+                ${PREPARATION_STEPS.map(s => `<li>${s}</li>`).join("")}
+              </ol>
+            </div>
+          </div>
+
+          <div class="section-heading"><span>🧰 3. Materials Needed Checklist</span></div>
+          <div style="display:grid; gap:6px;">
+            ${MATERIALS_NEEDED.map((m, i) => `
+              <label class="check-row ${m.checked ? 'done' : ''}">
+                <input type="checkbox" ${m.checked ? 'checked' : ''} onchange="toggleMaterial(${i})" />
+                <span><strong>${m.item}:</strong> ${m.purpose}</span>
+              </label>
+            `).join("")}
+          </div>
+        `;
+      } else if (state.activeTab === 1) {
+        panel.innerHTML = `
+          <div class="section-heading"><span>🏓 Stage 1: Ping-Pong Ball Pass &amp; Shoot</span></div>
+          <div class="step-list">
+            <div class="step-item"><span class="step-badge">Step 8</span> <strong>Get ready:</strong> The first student takes a ping-pong ball and a U-shaped paper channel.</div>
+            <div class="step-item"><span class="step-badge">Step 9</span> <strong>Pass the ball:</strong> Use the U-shaped paper channel to transfer the ping-pong ball to the next teammate. Continue passing it along the team line using the paper channels.</div>
+            <div class="step-item"><span class="step-badge">Step 10</span> <strong>Shoot into the cup:</strong> When the ball reaches the designated shooting point, use the paper channel to guide or shoot it into the target cup.</div>
+            <div class="step-item"><span class="step-badge">Step 11</span> <strong>Score three balls:</strong> The team must successfully get <strong>three ping-pong balls</strong> into the cup. If a ball misses, retrieve it safely and try again.</div>
+            <div class="step-item"><span class="step-badge">Step 12</span> <strong>Move on:</strong> After all three balls have landed in the cup, the team proceeds to Stage 2.</div>
+          </div>
+          <div class="general-rule-banner">
+            <strong>💡 Proctor Tip:</strong> Use the <em>"Simulate Miss &amp; Safe Retrieve"</em> button below the canvas to demonstrate how students calmly pick up a missed ball without interfering with neighboring lanes.
+          </div>
+        `;
+      } else if (state.activeTab === 2) {
+        panel.innerHTML = `
+          <div class="section-heading"><span>🥤 Stage 2: L-Straw Rubber-Band Pass</span></div>
+          <div class="step-list">
+            <div class="step-item"><span class="step-badge">Step 13</span> <strong>Prepare the straw:</strong> The first student takes the L-shaped straw. The rubber band is placed or hooked onto it as demonstrated by the proctor.</div>
+            <div class="step-item"><span class="step-badge">Step 14</span> <strong>Pass the rubber band:</strong> Use the L-shaped straw to transfer the rubber band to the next teammate.</div>
+            <div class="step-item"><span class="step-badge">Step 15</span> <strong>Continue the relay:</strong> Each student receives and passes the rubber band to the next person using the L-shaped straw. Follow the demonstrated method.</div>
+            <div class="step-item"><span class="step-badge">Step 16</span> <strong>Finish the stage:</strong> When the rubber band reaches the final student, the team may proceed to Stage 3.</div>
+          </div>
+          <div class="safety-card">
+            <span class="safety-icon">⚠️</span>
+            <div>
+              <strong>Important Safety &amp; Technique Note:</strong><br/>
+              Hold the L-shaped straw cleanly by hand—<strong>do not put straws in your mouth or point them toward anyone's face</strong>. Use the horizontal bend of the L-straw to hook and slide the rubber band onto your teammate's L-straw!
+            </div>
+          </div>
+        `;
+      } else if (state.activeTab === 3) {
+        panel.innerHTML = `
+          <div class="section-heading"><span>⭕ Stage 3: Hula-Hoop Run &amp; Ring the Bell</span></div>
+          <div class="step-list">
+            <div class="step-item"><span class="step-badge">Step 17</span> <strong>Take the hula hoop:</strong> The first student takes the hula hoop and waits for the signal.</div>
+            <div class="step-item"><span class="step-badge">Step 18</span> <strong>Run to the chair:</strong> Move safely toward the chair at the turning point.</div>
+            <div class="step-item"><span class="step-badge">Step 19</span> <strong>Ring the bell:</strong> When you reach the chair, ring the bell.</div>
+            <div class="step-item"><span class="step-badge">Step 20</span> <strong>Return to the team:</strong> Go back to the starting line and pass the hula hoop to the next teammate.</div>
+            <div class="step-item"><span class="step-badge">Step 21</span> <strong>Take turns:</strong> The next student repeats the same actions: run to the chair, ring the bell, return, and pass the hula hoop to the next person.</div>
+            <div class="step-item"><span class="step-badge">Step 22</span> <strong>Complete the relay:</strong> Continue until <strong>every team member</strong> has taken a turn.</div>
+          </div>
+          <div class="general-rule-banner">
+            <strong>🏁 Setup Clarification:</strong> All team members take a turn in Stage 3. Run carefully around the chair—do not push, block, or collide with other students.
+          </div>
+        `;
+      } else if (state.activeTab === 4) {
+        const verifiedCount = PROCTOR_FINAL_CHECK.filter(c => c.checked).length;
+        const pct = Math.round((verifiedCount / PROCTOR_FINAL_CHECK.length) * 100);
+        panel.innerHTML = `
+          <div class="section-heading"><span>🏆 6. How to Win</span></div>
+          <div class="win-banner">
+            <div style="font-weight:800; font-size:0.95rem; margin-bottom:4px;">🥇 Official Victory Condition</div>
+            <p style="font-size:0.84rem; color:#e0e7ff;">
+              The <strong>first group to complete all three stages and finish every required turn correctly</strong> is the winner. The proctor must confirm that the group has completed the tasks and followed the rules before announcing the result.
+            </p>
+          </div>
+
+          <div class="section-heading"><span>📋 8. Proctor's Final Check (${verifiedCount}/${PROCTOR_FINAL_CHECK.length})</span></div>
+          <div class="readiness-box">
+            <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:800; color:#166534;">
+              <span>Pre-Race Verification Meter</span>
+              <span>${pct}% Ready</span>
+            </div>
+            <div class="meter-track"><div class="meter-fill" style="width:${pct}%"></div></div>
+            <div style="display:grid; gap:6px; margin-top:8px;">
+              ${PROCTOR_FINAL_CHECK.map((item, i) => `
+                <label class="check-row ${item.checked ? 'done' : ''}">
+                  <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleProctorCheck(${i})" />
+                  <span style="font-size:0.81rem;">${item.text}</span>
+                </label>
+              `).join("")}
+            </div>
+          </div>
+
+          <div class="section-heading"><span>🛡️ 7. Rules and Safety Reminders</span></div>
+          <div style="display:grid; gap:6px;">
+            ${SAFETY_RULES.map(r => `
+              <div class="safety-card">
+                <span class="safety-icon">${r.icon}</span>
+                <span>${r.text}</span>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }
+      updateTimelineUI();
+    }
+
+    function toggleMaterial(idx) {
+      MATERIALS_NEEDED[idx].checked = !MATERIALS_NEEDED[idx].checked;
+      renderSidePanel();
+    }
+
+    function toggleProctorCheck(idx) {
+      PROCTOR_FINAL_CHECK[idx].checked = !PROCTOR_FINAL_CHECK[idx].checked;
+      renderStageToolbar();
+      renderSidePanel();
+    }
+
+    function verifyAllProctorChecks() {
+      PROCTOR_FINAL_CHECK.forEach(c => c.checked = true);
+      playSound("win");
+      renderStageToolbar();
+      renderSidePanel();
+    }
+
+    // =========================================================================
+    // HTML5 CANVAS VECTOR DRAWING UTILITIES
+    // =========================================================================
+    function roundRect(x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    function drawBox(x, y, w, h, fill, stroke = null, lw = 2, r = 10) {
+      ctx.fillStyle = fill;
+      roundRect(x, y, w, h, r);
+      ctx.fill();
+      if (stroke) {
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = lw;
+        ctx.stroke();
+      }
+    }
+
+    function drawArenaFloor(W, H, laneTitle = "TEAM A — LANE 1") {
+      // Gym / Sports Field Floor
+      const bg = ctx.createLinearGradient(0, 0, 0, H);
+      bg.addColorStop(0, "#1e293b");
+      bg.addColorStop(0.22, "#334155");
+      bg.addColorStop(0.23, "#e2e8f0");
+      bg.addColorStop(1, "#cbd5e1");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
+
+      // Header Strip
+      drawBox(W * 0.03, H * 0.03, W * 0.34, H * 0.12, "rgba(15, 23, 42, 0.85)", "#fbbf24", 2, 10);
+      ctx.fillStyle = "#fde047";
+      ctx.font = `800 ${Math.max(10, W * 0.015)}px sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(laneTitle, W * 0.20, H * 0.09);
+
+      // Masking Tape Lane Boundaries (Top & Bottom of floor)
+      const laneTop = H * 0.28;
+      const laneBot = H * 0.88;
+      ctx.fillStyle = "#f8fafc";
+      ctx.fillRect(W * 0.04, laneTop, W * 0.92, laneBot - laneTop);
+
+      // Yellow Masking Tape Lines
+      ctx.fillStyle = "#facc15";
+      ctx.fillRect(W * 0.04, laneTop - 4, W * 0.92, 6);
+      ctx.fillRect(W * 0.04, laneBot - 2, W * 0.92, 6);
+
+      // Start Line (Left)
+      ctx.fillStyle = "#ef4444";
+      ctx.fillRect(W * 0.11, laneTop, 6, laneBot - laneTop);
+      ctx.save();
+      ctx.translate(W * 0.095, (laneTop + laneBot) / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillStyle = "#dc2626";
+      ctx.font = "900 11px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("START / FINISH LINE", 0, 0);
+      ctx.restore();
+
+      // Safety Cones along lane edges
+      [W * 0.11, W * 0.5, W * 0.92].forEach(cx => {
+        drawCone(cx, laneTop - 8);
+        drawCone(cx, laneBot + 8);
+      });
+    }
+
+    function drawCone(x, y) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.fillStyle = "#f97316";
+      ctx.strokeStyle = "#0f172a";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(-7, 6);
+      ctx.lineTo(0, -8);
+      ctx.lineTo(7, 6);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(-3.5, -1, 7, 2.5);
+      ctx.restore();
+    }
+
+    function drawPlayer(x, y, scale, opts = {}) {
+      const {
+        shirt = "#2563eb",
+        num = "1",
+        armAngle = 0,
+        legPhase = 0,
+        active = false
+      } = opts;
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(scale, scale);
+
+      if (active) {
+        ctx.fillStyle = "rgba(37, 99, 235, 0.22)";
+        ctx.beginPath();
+        ctx.ellipse(0, 44, 24, 7, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Legs (animated stride if legPhase != 0)
+      const stride = Math.sin(legPhase) * 9;
+      ctx.fillStyle = "#1e293b";
+      roundRect(-11 + stride * 0.5, 26, 8, 18, 4);
+      ctx.fill();
+      roundRect(3 - stride * 0.5, 26, 8, 18, 4);
+      ctx.fill();
+
+      // Jersey Torso
+      ctx.fillStyle = shirt;
+      ctx.strokeStyle = "#0f172a";
+      ctx.lineWidth = 2;
+      roundRect(-14, 6, 28, 23, 8);
+      ctx.fill();
+      ctx.stroke();
+
+      // Jersey Number
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "800 11px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(num, 0, 18);
+
+      // Arms reaching forward
+      ctx.save();
+      ctx.translate(10, 12);
+      ctx.rotate(armAngle);
+      ctx.strokeStyle = shirt;
+      ctx.lineWidth = 5.5;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(18, 4);
+      ctx.stroke();
+      // Hand
+      ctx.fillStyle = "#fde68a";
+      ctx.beginPath();
+      ctx.arc(19, 4, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // Head
+      ctx.fillStyle = "#fde68a";
+      ctx.strokeStyle = "#0f172a";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, -7, 13, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Hair
+      ctx.fillStyle = "#0f172a";
+      ctx.beginPath();
+      ctx.arc(0, -10, 13, Math.PI, 0);
+      ctx.fill();
+
+      // Eyes
+      ctx.fillStyle = "#0f172a";
+      ctx.beginPath();
+      ctx.arc(4, -6, 1.8, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function drawPingPongBall(x, y, r = 6.5) {
+      ctx.save();
+      ctx.fillStyle = "#fb923c";
+      ctx.strokeStyle = "#9a3412";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      // Specular shine
+      ctx.fillStyle = "#ffedd5";
+      ctx.beginPath();
+      ctx.arc(x - r * 0.3, y - r * 0.3, r * 0.28, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawUChannel(x, y, length, tiltRad) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(tiltRad);
+      // U-shaped paper trough
+      drawBox(0, -5, length, 10, "#ffffff", "#2563eb", 2, 4);
+      ctx.strokeStyle = "#93c5fd";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(3, 0);
+      ctx.lineTo(length - 3, 0);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawTargetCup(x, y, scoredCount) {
+      ctx.save();
+      ctx.translate(x, y);
+      // Cup body
+      ctx.fillStyle = "#ef4444";
+      ctx.strokeStyle = "#0f172a";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(-16, -18);
+      ctx.lineTo(16, -18);
+      ctx.lineTo(12, 18);
+      ctx.lineTo(-12, 18);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Cup rim
+      drawBox(-18, -21, 36, 5, "#ffffff", "#0f172a", 1.5, 2);
+
+      // Score label on cup
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "900 11px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(`${scoredCount}/3`, 0, 2);
+      ctx.restore();
+    }
+
+    function drawLStraw(x, y, scale = 1, flipX = 1) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(scale * flipX, scale);
+      ctx.strokeStyle = "#06b6d4";
+      ctx.lineWidth = 6;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.beginPath();
+      // Vertical grip held by hand -> bend -> horizontal tip
+      ctx.moveTo(0, 22);
+      ctx.lineTo(0, 0);
+      ctx.lineTo(26, 0);
+      ctx.stroke();
+
+      // Outline highlight
+      ctx.strokeStyle = "#0e7490";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(-3, 22);
+      ctx.lineTo(-3, -3);
+      ctx.lineTo(26, -3);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawRubberBand(x, y, stretch = 1) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.strokeStyle = "#ec4899";
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 6 * stretch, 11, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawHulaHoop(x, y, rx = 18, ry = 28) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.strokeStyle = "#f59e0b";
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.strokeStyle = "#fef08a";
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 6]);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawChairAndBell(x, y, ringing = false, t = 0) {
+      ctx.save();
+      ctx.translate(x, y);
+      // Chair seat & backrest
+      drawBox(-18, -24, 8, 42, "#92400e", "#0f172a", 2, 3);
+      drawBox(-18, -2, 34, 8, "#b45309", "#0f172a", 2, 3);
+      drawBox(8, 6, 6, 18, "#78350f", "#0f172a", 1.5, 2);
+      drawBox(-16, 6, 6, 18, "#78350f", "#0f172a", 1.5, 2);
+
+      // Brass Bell sitting on Chair Seat
+      const bellShake = ringing ? Math.sin(t * 45) * 0.28 : 0;
+      ctx.save();
+      ctx.translate(0, -6);
+      ctx.rotate(bellShake);
+      ctx.fillStyle = "#fbbf24";
+      ctx.strokeStyle = "#0f172a";
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      ctx.arc(0, -6, 9, Math.PI, 0);
+      ctx.lineTo(11, 2);
+      ctx.lineTo(-11, 2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      // Handle
+      ctx.fillStyle = "#1e293b";
+      ctx.fillRect(-2, -21, 4, 6);
+      ctx.restore();
+
+      // Ringing Sound Waves
+      if (ringing) {
+        ctx.strokeStyle = "#f59e0b";
+        ctx.lineWidth = 2.5;
+        [16, 24].forEach(rad => {
+          ctx.beginPath();
+          ctx.arc(0, -14, rad, -Math.PI * 0.85, -Math.PI * 0.15);
+          ctx.stroke();
+        });
+      }
+      ctx.restore();
+    }
+
+    // =========================================================================
+    // SCENE 0: OVERVIEW & SETUP (TOP-DOWN / ISOMETRIC ARENA)
+    // =========================================================================
+    function renderOverview(W, H, p, t) {
+      drawArenaFloor(W, H, "ARENA SETUP — 3 SEQUENTIAL STAGES");
+
+      const midY = H * 0.58;
+
+      // Stage Zone Dividers
+      const s1X = W * 0.16;
+      const s2X = W * 0.45;
+      const s3X = W * 0.72;
+      const turnX = W * 0.90;
+
+      // Stage 1 Zone Box
+      drawBox(s1X, H * 0.32, W * 0.26, H * 0.52, "rgba(219, 234, 254, 0.7)", "#2563eb", 2, 10);
+      ctx.fillStyle = "#1e3a8a";
+      ctx.font = "800 11px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("STAGE 1: BALL & CUP", s1X + W * 0.13, H * 0.36);
+      drawTargetCup(s1X + W * 0.21, midY + 8, 3);
+      drawPingPongBall(s1X + W * 0.07, midY, 6);
+      drawPingPongBall(s1X + W * 0.10, midY + 12, 6);
+      drawPingPongBall(s1X + W * 0.13, midY, 6);
+
+      // Stage 2 Zone Box
+      drawBox(s2X, H * 0.32, W * 0.24, H * 0.52, "rgba(254, 243, 199, 0.75)", "#f59e0b", 2, 10);
+      ctx.fillStyle = "#92400e";
+      ctx.fillText("STAGE 2: L-STRAW PASS", s2X + W * 0.12, H * 0.36);
+      drawLStraw(s2X + W * 0.08, midY, 0.9, 1);
+      drawRubberBand(s2X + W * 0.12, midY, 1);
+      drawLStraw(s2X + W * 0.17, midY, 0.9, -1);
+
+      // Stage 3 Zone Box
+      drawBox(s3X, H * 0.32, W * 0.22, H * 0.52, "rgba(209, 250, 229, 0.75)", "#10b981", 2, 10);
+      ctx.fillStyle = "#065f46";
+      ctx.fillText("STAGE 3: HOOP & BELL", s3X + W * 0.11, H * 0.36);
+      drawHulaHoop(s3X + W * 0.07, midY + 4, 14, 22);
+      drawChairAndBell(turnX, midY + 6, Math.sin(t * 5) > 0.7, t);
+
+      // Team Lined Up Behind Start Line
+      [0, 1, 2, 3].forEach(i => {
+        drawPlayer(W * 0.06, H * 0.38 + i * 36, 0.62, {
+          shirt: i % 2 === 0 ? "#2563eb" : "#1d4ed8",
+          num: String(i + 1)
+        });
+      });
+
+      // Animated Directional Flow Arrow across stages
+      const arrowX = W * 0.14 + ((p / 100) * W * 0.76);
+      drawBox(arrowX - 18, H * 0.18, 36, 22, "#10b981", "#ffffff", 2, 6);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "900 11px sans-serif";
+      ctx.fillText("GO ➡️", arrowX, H * 0.18 + 11);
+    }
+
+    // =========================================================================
+    // SCENE 1: STAGE 1 - PING-PONG BALL PASS & SHOOT
+    // =========================================================================
+    function renderStage1BallPass(W, H, p, t) {
+      drawArenaFloor(W, H, "STAGE 1 — U-CHANNEL BALL PASS & SHOOT");
+
+      const midY = H * 0.58;
+      const playerXs = [W * 0.20, W * 0.36, W * 0.52, W * 0.68];
+      const cupX = W * 0.85;
+      const cupY = midY + 12;
+
+      // Determine current ball cycle (0, 1, or 2 -> 3 balls total)
+      const cycle = Math.min(2, Math.floor(p / 33.34));
+      const localP = (p % 33.34) / 33.34; // 0 to 1 per ball
+
+      // Sync scored counter smoothly
+      const computedScored = localP > 0.82 && !state.stage1SimulateMiss ? cycle + 1 : cycle;
+      if (computedScored !== state.stage1BallsScored) {
+        state.stage1BallsScored = computedScored;
+        const el = document.getElementById("cupScoreDisplay");
+        if (el) el.textContent = `${state.stage1BallsScored} / 3`;
+        if (computedScored > 0 && state.lastSoundMilestone !== `s1-${computedScored}`) {
+          state.lastSoundMilestone = `s1-${computedScored}`;
+          playSound(computedScored === 3 ? "win" : "cup");
+        }
+      }
+
+      // Draw Target Cup
+      drawTargetCup(cupX, cupY, state.stage1BallsScored);
+
+      // Draw 4 Teammates holding U-shaped paper channels
+      playerXs.forEach((px, idx) => {
+        const activePlayer = Math.floor(localP * 4) === idx;
+        const tilt = activePlayer ? 0.16 : 0.04;
+        drawPlayer(px, midY, 1.0, {
+          shirt: "#2563eb",
+          num: String(idx + 1),
+          armAngle: tilt,
+          active: activePlayer
+        });
+        drawUChannel(px + 22, midY + 14, W * 0.11, tilt);
+      });
+
+      // Ping-Pong Ball Trajectory
+      let ballX, ballY;
+      if (state.stage1SimulateMiss && localP > 0.55) {
+        // Missed shot parabola + safe floor retrieval
+        const mp = (localP - 0.55) / 0.45;
+        ballX = playerXs[3] + 55 + mp * (cupX - playerXs[3] - 35);
+        ballY = midY + 12 + Math.sin(mp * Math.PI * 1.4) * 42;
+        if (state.lastSoundMilestone !== "s1-miss") {
+          state.lastSoundMilestone = "s1-miss";
+          playSound("miss");
+        }
+        drawBox(W * 0.52, H * 0.17, W * 0.42, 30, "#fee2e2", "#ef4444", 2, 8);
+        ctx.fillStyle = "#991b1b";
+        ctx.font = "800 11px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("⚠️ Ball Missed! Retrieve safely & try again!", W * 0.73, H * 0.17 + 15);
+      } else if (localP < 0.72) {
+        // Rolling smoothly across all 4 U-channels
+        const rollP = localP / 0.72;
+        ballX = (playerXs[0] + 24) + rollP * ((playerXs[3] + 55) - (playerXs[0] + 24));
+        ballY = midY + 10 + Math.sin(rollP * Math.PI * 4) * 3;
+      } else {
+        // Arcing from Player 4's U-channel into the Target Cup!
+        const shootP = (localP - 0.72) / 0.28;
+        const startShootX = playerXs[3] + 55;
+        ballX = startShootX + shootP * (cupX - startShootX);
+        ballY = (midY + 10) - Math.sin(shootP * Math.PI) * 36 + shootP * 6;
+      }
+
+      drawPingPongBall(ballX, ballY, 7);
+
+      // Remaining Reserve Balls at Start Line
+      const remaining = Math.max(0, 3 - state.stage1BallsScored - 1);
+      for (let r = 0; r < remaining; r++) {
+        drawPingPongBall(W * 0.13, midY - 12 + r * 18, 6);
+      }
+    }
+
+    // =========================================================================
+    // SCENE 2: STAGE 2 - L-STRAW RUBBER-BAND PASS
+    // =========================================================================
+    function renderStage2StrawPass(W, H, p, t) {
+      drawArenaFloor(W, H, "STAGE 2 — L-STRAW RUBBER-BAND PASS");
+
+      const midY = H * 0.62;
+      const playerXs = [W * 0.22, W * 0.40, W * 0.58, W * 0.76];
+
+      // Determine active transfer segment (0->1, 1->2, 2->3)
+      const seg = Math.min(2, Math.floor((p / 100) * 3));
+      const segLocal = ((p / 100) * 3) % 1;
+
+      if (seg !== state.stage2PassIndex && state.isPlaying) {
+        state.stage2PassIndex = seg;
+        playSound("pass");
+        renderStageToolbar();
+      }
+
+      // Draw 4 Teammates holding L-shaped Straws BY HAND
+      playerXs.forEach((px, idx) => {
+        const isSender = idx === seg;
+        const isReceiver = idx === seg + 1;
+        drawPlayer(px, midY, 1.0, {
+          shirt: "#f59e0b",
+          num: String(idx + 1),
+          armAngle: isSender ? 0.15 : (isReceiver ? -0.1 : 0),
+          active: isSender || isReceiver
+        });
+        drawLStraw(px + 20, midY + 4, 1.05, 1);
+      });
+
+      // Rubber Band moving along horizontal tip of Sender's L-Straw onto Receiver's L-Straw
+      const senderTipX = playerXs[seg] + 44;
+      const receiverTipX = playerXs[seg + 1] + 24;
+      const bandX = senderTipX + segLocal * (receiverTipX - senderTipX);
+      const bandY = midY + 4 - Math.sin(segLocal * Math.PI) * 8;
+      drawRubberBand(bandX, bandY, 1 + Math.sin(segLocal * Math.PI) * 0.35);
+
+      // Magnified Close-Up Inset Box at Top Right showing exact L-Straw Hook Technique
+      const boxW = W * 0.44;
+      const boxH = H * 0.24;
+      const boxX = W * 0.52;
+      const boxY = H * 0.03;
+      drawBox(boxX, boxY, boxW, boxH, "#ffffff", "#06b6d4", 2.5, 12);
+
+      ctx.fillStyle = "#0e7490";
+      ctx.font = "800 10.5px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("🔍 CLOSE-UP: HANDS-ONLY L-STRAW TRANSFER", boxX + boxW / 2, boxY + 15);
+
+      const insetCenterY = boxY + boxH * 0.62;
+      drawLStraw(boxX + boxW * 0.34, insetCenterY, 1.35, 1);
+      drawLStraw(boxX + boxW * 0.66, insetCenterY, 1.35, -1);
+      const insetBandX = (boxX + boxW * 0.45) + segLocal * (boxW * 0.10);
+      drawRubberBand(insetBandX, insetCenterY, 1.2);
+    }
+
+    // =========================================================================
+    // SCENE 3: STAGE 3 - HULA-HOOP RUN & RING THE BELL
+    // =========================================================================
+    function renderStage3HulaBell(W, H, p, t) {
+      drawArenaFloor(W, H, "STAGE 3 — HULA-HOOP RUN & RING THE BELL");
+
+      const laneMidY = H * 0.58;
+      const startX = W * 0.16;
+      const chairX = W * 0.86;
+
+      // Determine current runner turn (0..3 for 4 teammates)
+      const turn = Math.min(3, Math.floor((p / 100) * 4));
+      const turnP = ((p / 100) * 4) % 1; // 0..1 within current teammate's run
+
+      if (turn !== state.stage3TurnIndex && state.isPlaying) {
+        state.stage3TurnIndex = turn;
+        state.stage3BellRangThisTurn = false;
+        renderStageToolbar();
+      }
+
+      // Runner kinematics:
+      // 0.00 - 0.42: Run to chair
+      // 0.42 - 0.56: Reach chair & Ring Bell!
+      // 0.56 - 0.90: Loop back to starting line
+      // 0.90 - 1.00: Pass hula hoop to next teammate
+      let runnerX = startX;
+      let runnerY = laneMidY;
+      let ringing = false;
+      let stride = 0;
+
+      if (turnP < 0.42) {
+        const rp = turnP / 0.42;
+        runnerX = startX + rp * (chairX - 38 - startX);
+        runnerY = laneMidY - 12;
+        stride = t * 14;
+      } else if (turnP < 0.56) {
+        runnerX = chairX - 38;
+        runnerY = laneMidY - 8;
+        ringing = true;
+        if (!state.stage3BellRangThisTurn) {
+          state.stage3BellRangThisTurn = true;
+          playSound("bell");
+        }
+      } else if (turnP < 0.90) {
+        const bp = (turnP - 0.56) / 0.34;
+        runnerX = (chairX - 38) - bp * (chairX - 38 - startX);
+        runnerY = laneMidY + 18;
+        stride = t * 14;
+      } else {
+        runnerX = startX;
+        runnerY = laneMidY;
+      }
+
+      // Draw Chair & Bell at Turning Point
+      drawChairAndBell(chairX, laneMidY, ringing, t);
+
+      // Draw Waiting / Completed Teammates near Start Line
+      [0, 1, 2, 3].forEach(idx => {
+        if (idx === turn) return; // Drawn as active runner below
+        const completed = idx < turn;
+        const waitY = H * 0.37 + idx * 34;
+        drawPlayer(W * 0.075, waitY, 0.65, {
+          shirt: completed ? "#10b981" : "#64748b",
+          num: String(idx + 1)
+        });
+      });
+
+      // Draw Active Runner + Hula Hoop
+      drawPlayer(runnerX, runnerY, 1.0, {
+        shirt: "#10b981",
+        num: String(turn + 1),
+        legPhase: stride,
+        active: true
+      });
+      drawHulaHoop(runnerX + 4, runnerY + 12, 18, 28);
+
+      // Bell Ring Callout Banner
+      if (ringing) {
+        drawBox(W * 0.56, H * 0.16, W * 0.36, 32, "#fef3c7", "#f59e0b", 2.5, 10);
+        ctx.fillStyle = "#92400e";
+        ctx.font = "900 12px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(`🔔 DING! Player ${turn + 1} Rings the Bell!`, W * 0.74, H * 0.16 + 16);
+      }
+
+      // Celebration Banner when Player 4 finishes
+      if (turn === 3 && turnP > 0.9) {
+        if (!state.stage3AllFinished) {
+          state.stage3AllFinished = true;
+          playSound("win");
+          renderStageToolbar();
+        }
+        drawBox(W * 0.22, H * 0.36, W * 0.56, 76, "rgba(15, 23, 42, 0.92)", "#fbbf24", 3.5, 16);
+        ctx.fillStyle = "#fde047";
+        ctx.font = "900 16px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("🏆 ALL 3 STAGES & ALL TURNS COMPLETE!", W / 2, H * 0.36 + 28);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "600 12px sans-serif";
+        ctx.fillText("Proctor confirms all rules followed — WINNER!", W / 2, H * 0.36 + 52);
+      }
+    }
+
+    // =========================================================================
+    // SCENE 4: RULES, SAFETY & PROCTOR CHECK SUMMARY VISUAL
+    // =========================================================================
+    function renderStage4Summary(W, H, p, t) {
+      drawArenaFloor(W, H, "FAIR PLAY, SAFETY & PROCTOR CONFIRMATION");
+
+      const cardW = W * 0.76;
+      const cardH = H * 0.62;
+      const cardX = (W - cardW) / 2;
+      const cardY = H * 0.22;
+      drawBox(cardX, cardY, cardW, cardH, "#ffffff", "#2563eb", 3, 16);
+
+      ctx.fillStyle = "#1e3a8a";
+      ctx.font = `900 ${Math.max(12, W * 0.018)}px sans-serif`;
+      ctx.textAlign = "center";
+      ctx.fillText("🛡️ KEY SAFETY & RELAY COMPLIANCE HIGHLIGHTS", W / 2, cardY + 26);
+
+      const pillars = [
+        { icon: "🚦", title: "Wait for Signal", desc: "Begin only on proctor whistle; stay in lane." },
+        { icon: "🥤", title: "Safe Straw Use", desc: "Never put L-straws in mouth or aim at faces." },
+        { icon: "🤲", title: "Safe Retrieval", desc: "Pick up dropped balls/bands without interfering." },
+        { icon: "🏆", title: "Proctor Confirm", desc: "All 3 stages & every turn verified to win!" }
+      ];
+
+      const colW = (cardW - 50) / 2;
+      const colH = (cardH - 64) / 2;
+      pillars.forEach((pl, idx) => {
+        const r = Math.floor(idx / 2);
+        const c = idx % 2;
+        const bx = cardX + 18 + c * (colW + 14);
+        const by = cardY + 46 + r * (colH + 10);
+        const pulse = Math.floor(t * 1.5) % 4 === idx;
+        drawBox(bx, by, colW, colH, pulse ? "#eff6ff" : "#f8fafc", pulse ? "#2563eb" : "#cbd5e1", pulse ? 2.5 : 1.5, 10);
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "800 12px sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText(`${pl.icon} ${pl.title}`, bx + 12, by + 20);
+        ctx.fillStyle = "#475569";
+        ctx.font = "600 10.5px sans-serif";
+        ctx.fillText(pl.desc, bx + 12, by + 40);
+      });
+    }
+
+    // =========================================================================
+    // MAIN ANIMATION LOOP
+    // =========================================================================
+    function animate(ts) {
+      if (!state.lastTime) state.lastTime = ts;
+      const dt = ts - state.lastTime;
+      state.lastTime = ts;
+
+      if (state.isPlaying) {
+        state.progress += (dt / state.loopDurationMs) * 100 * state.speed;
+        if (state.progress >= 100) {
+          state.progress = 0;
+          state.lastSoundMilestone = "";
+          if (state.activeTab === 1) state.stage1BallsScored = 0;
+          if (state.activeTab === 3) {
+            state.stage3TurnIndex = 0;
+            state.stage3BellRangThisTurn = false;
+            state.stage3AllFinished = false;
+          }
+        }
+        updateTimelineUI();
+      }
+
+      const dpr = window.devicePixelRatio || 1;
+      const W = canvas.width / dpr;
+      const H = canvas.height / dpr;
+      const t = ts / 1000;
+
+      ctx.clearRect(0, 0, W, H);
+
+      switch (state.activeTab) {
+        case 0: renderOverview(W, H, state.progress, t); break;
+        case 1: renderStage1BallPass(W, H, state.progress, t); break;
+        case 2: renderStage2StrawPass(W, H, state.progress, t); break;
+        case 3: renderStage3HulaBell(W, H, state.progress, t); break;
+        case 4: renderStage4Summary(W, H, state.progress, t); break;
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    // =========================================================================
+    // INITIALIZE APPLICATION ON WINDOW LOAD
+    // =========================================================================
+    window.onload = function () {
+      resizeCanvas();
+      selectTab(0);
+      requestAnimationFrame(animate);
+    };
+  </script>
+</body>
+</html>

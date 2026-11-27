@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAARD ENGLISH CAMP 2026: Memory & Sentence-Building Challenge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #1e293b;
+        }
+        .font-display {
+            font-family: 'Fredoka', sans-serif;
+        }
+        /* Custom subtle scrollbar for step panel */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .stage-tab-active {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+        canvas {
+            touch-action: manipulation;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header & Event Details -->
+    <header class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white shadow-lg border-b-4 border-amber-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-300/40 text-amber-300 text-xs font-bold tracking-wider uppercase mb-1">
+                        <span>🏕️ Game Activity Walkthrough</span>
+                    </div>
+                    <h1 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                        SAARD ENGLISH CAMP 2026: <span class="text-amber-300">Memory &amp; Sentence-Building Challenge</span>
+                    </h1>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 text-sm bg-white/10 backdrop-blur-sm px-4 py-2.5 rounded-2xl border border-white/15">
+                    <div class="flex items-center gap-2">
+                        <span class="text-amber-300 text-base">📅</span>
+                        <div>
+                            <span class="text-blue-200 text-xs block uppercase font-semibold">Date</span>
+                            <span class="font-semibold text-white">November 28, 2026</span>
+                        </div>
+                    </div>
+                    <div class="h-7 w-px bg-white/20 hidden sm:block"></div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-amber-300 text-base">📋</span>
+                        <div>
+                            <span class="text-blue-200 text-xs block uppercase font-semibold">Proctor</span>
+                            <span class="font-semibold text-white">Mr. Jose Cer Gapay Bundalian</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Interactive Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col gap-4">
+
+        <!-- Stage Navigation Pills -->
+        <nav aria-label="Activity Stages" class="grid grid-cols-2 sm:grid-cols-5 gap-2 bg-white p-2 rounded-2xl shadow-sm border border-slate-200">
+            <button onclick="selectStage(0)" id="tab-0" class="stage-tab px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1.5 text-slate-600 hover:bg-slate-100">
+                <span>🗺️</span> <span>Overview &amp; Setup</span>
+            </button>
+            <button onclick="selectStage(1)" id="tab-1" class="stage-tab px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1.5 text-slate-600 hover:bg-slate-100">
+                <span>🎈</span> <span>Stage 1: Pop &amp; Remember</span>
+            </button>
+            <button onclick="selectStage(2)" id="tab-2" class="stage-tab px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1.5 text-slate-600 hover:bg-slate-100">
+                <span>🏃</span> <span>Stage 2: Teamwork Relay</span>
+            </button>
+            <button onclick="selectStage(3)" id="tab-3" class="stage-tab px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1.5 text-slate-600 hover:bg-slate-100">
+                <span>✍️</span> <span>Stage 3: Write &amp; Present</span>
+            </button>
+            <button onclick="selectStage(4)" id="tab-4" class="stage-tab col-span-2 sm:col-span-1 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1.5 text-slate-600 hover:bg-slate-100">
+                <span>🏆</span> <span>Scoring &amp; Rules</span>
+            </button>
+        </nav>
+
+        <!-- Workspace Grid: Canvas Left + Synchronized Caption Panel Right -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1 items-stretch">
+
+            <!-- Left Column: Interactive HTML5 Canvas & Playback Controls -->
+            <div class="lg:col-span-8 flex flex-col gap-3">
+                <div class="relative bg-white rounded-3xl shadow-md border border-slate-200 overflow-hidden flex-1 min-h-[380px] sm:min-h-[460px]" id="canvas-wrapper">
+                    <canvas id="demoCanvas" class="w-full h-full block"></canvas>
+
+                    <!-- Interactive Balloon Popping Overlay Button (Visible in Stage 1) -->
+                    <div id="balloon-mode-banner" class="hidden absolute top-3 left-3 right-3 sm:right-auto bg-amber-50/95 backdrop-blur border-2 border-amber-400 rounded-2xl px-3.5 py-2 shadow-md flex items-center justify-between sm:justify-start gap-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg">🎈</span>
+                            <span class="text-xs sm:text-sm font-bold text-amber-950" id="balloon-prompt-text">Interactive Mode: Click balloons on the phone!</span>
+                        </div>
+                        <button onclick="resetBalloons()" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-lg shadow-sm transition">
+                            Reset Balloons
+                        </button>
+                    </div>
+
+                    <!-- Stage Progress Pill Overlay -->
+                    <div class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full flex items-center gap-2 pointer-events-none">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span id="canvas-status-label">Arena Floor Plan Overview</span>
+                    </div>
+                </div>
+
+                <!-- Playback Control Bar -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-3 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-2">
+                        <button onclick="prevStage()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm transition flex items-center gap-1" title="Previous Stage">
+                            <span>◀</span> <span class="hidden sm:inline">Prev</span>
+                        </button>
+                        <button onclick="togglePlay()" id="play-pause-btn" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-sm transition flex items-center gap-1.5 min-w-[105px] justify-center">
+                            <span id="play-icon">⏸️</span> <span id="play-text">Pause</span>
+                        </button>
+                        <button onclick="nextStage()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm transition flex items-center gap-1" title="Next Stage">
+                            <span class="hidden sm:inline">Next</span> <span>▶</span>
+                        </button>
+                    </div>
+
+                    <!-- Timeline Scrubber -->
+                    <div class="flex-1 min-w-[140px] flex items-center gap-2 px-1">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase">Step</span>
+                        <div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden cursor-pointer border border-slate-200" onclick="scrubTimeline(event)" id="timeline-bar">
+                            <div id="timeline-fill" class="h-full bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full transition-all duration-75" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Speed & Special Toggle -->
+                    <div class="flex items-center gap-2">
+                        <button onclick="toggleSpeed()" id="speed-btn" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition border border-slate-200">
+                            Speed: 1x
+                        </button>
+                        <button onclick="restartCurrentStage()" class="px-3 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition border border-indigo-200" title="Replay Current Stage">
+                            ↻ Replay
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Synchronized Step-by-Step Instructions & Proctor Guide -->
+            <aside class="lg:col-span-4 bg-white rounded-3xl shadow-md border border-slate-200 flex flex-col overflow-hidden">
+                <div class="bg-slate-50 px-5 py-4 border-b border-slate-200">
+                    <div class="flex items-center justify-between">
+                        <span id="panel-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase tracking-wide bg-blue-100 text-blue-700">
+                            Setup &amp; Layout
+                        </span>
+                        <span id="panel-step-counter" class="text-xs font-bold text-slate-400">1 / 5</span>
+                    </div>
+                    <h2 id="panel-title" class="font-display text-xl font-bold text-slate-800 mt-1.5">
+                        Arena Setup &amp; Materials
+                    </h2>
+                    <p id="panel-subtitle" class="text-xs text-slate-500 mt-0.5">
+                        Classroom layout and preparation checklist before starting.
+                    </p>
+                </div>
+
+                <!-- Dynamic Step Cards Container -->
+                <div id="panel-content" class="p-5 flex-1 overflow-y-auto space-y-3 max-h-[440px] lg:max-h-[470px]">
+                    <!-- Populated via JS -->
+                </div>
+
+                <!-- Proctor Reminder Footer -->
+                <div class="bg-amber-50 border-t border-amber-200/80 px-5 py-3.5">
+                    <div class="flex items-start gap-2.5">
+                        <span class="text-base mt-0.5">📢</span>
+                        <div>
+                            <h4 class="text-xs font-extrabold uppercase tracking-wider text-amber-800">Proctor Note</h4>
+                            <p id="proctor-note-text" class="text-xs text-amber-900/90 mt-0.5 leading-relaxed">
+                                Demonstrate the relay movement and exact pen-retrieval method before starting so all pairs understand the boundary rule.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <script>
+        /**
+         * SAARD ENGLISH CAMP 2026: Memory & Sentence-Building Challenge
+         * Interactive HTML5 Canvas Walkthrough & Demonstration
+         */
+
+        const canvas = document.getElementById('demoCanvas');
+        const ctx = canvas.getContext('2d');
+        const wrapper = document.getElementById('canvas-wrapper');
+
+        // Simulation State
+        let currentStage = 0; // 0: Overview, 1: Stage 1, 2: Stage 2, 3: Stage 3, 4: Scoring & Rules
+        let isPlaying = true;
+        let speedMultiplier = 1;
+        let stageTime = 0; // Progress within current stage in seconds
+        let lastFrameTime = performance.now();
+
+        // Stage durations in seconds (for smooth auto-animated walkthrough)
+        const stageDurations = [10, 14, 14, 16, 12];
+
+        // Interactive Stage 1 Balloon Data
+        const targetWords = ["Teamwork", "helps", "us", "succeed", "together."];
+        let balloons = [];
+        let interactiveBalloonUsed = false;
+
+        function initBalloons() {
+            const colors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'];
+            // Relative positions inside the zoomed phone screen
+            const layout = [
+                { rx: 0.25, ry: 0.28 },
+                { rx: 0.72, ry: 0.26 },
+                { rx: 0.48, ry: 0.46 },
+                { rx: 0.26, ry: 0.67 },
+                { rx: 0.74, ry: 0.68 }
+            ];
+            balloons = targetWords.map((word, idx) => ({
+                id: idx,
+                word: word,
+                color: colors[idx % colors.length],
+                rx: layout[idx].rx,
+                ry: layout[idx].ry,
+                popped: false,
+                popAnim: 0,
+                bobOffset: idx * 1.3,
+                screenBounds: null // updated during render for click hit-testing
+            }));
+            interactiveBalloonUsed = false;
+        }
+
+        function resetBalloons() {
+            initBalloons();
+            if (currentStage === 1) {
+                stageTime = 1.5;
+            }
+        }
+
+        // Stage Metadata & Synchronized Instructions (grounded strictly in the PDF)
+        const stageData = [
+            {
+                badge: "Overview & Setup",
+                title: "Arena Setup & Materials",
+                subtitle: "How the classroom/activity zone is prepared before the game starts.",
+                proctorNote: "Confirm whether the 1 ping-pong ball and pen are passed from pair to pair or if each station has its own equipment.",
+                steps: [
+                    {
+                        num: "1",
+                        title: "Materials Checklist",
+                        desc: "1 Ping-pong ball, 6 Cups, 6 Pens, 30 small sheets of clean paper (folded in advance), 1 roll of masking tape, and 6 mobile phones with internet access.",
+                        highlightRange: [0, 3.5]
+                    },
+                    {
+                        num: "2",
+                        title: "Start Zone (Mobile Phones)",
+                        desc: "Prepare the online 'Pop the Balloon' activity on the 6 mobile phones with target words arranged in intended sentence/paragraph order.",
+                        highlightRange: [3.5, 6]
+                    },
+                    {
+                        num: "3",
+                        title: "Masking Tape & Cup-and-Pen Station",
+                        desc: "Use masking tape to mark a clear boundary line. Place the cup and pen beyond the marked line that students must NOT cross.",
+                        highlightRange: [6, 8]
+                    },
+                    {
+                        num: "4",
+                        title: "Paper Collection & Presentation Area",
+                        desc: "Place folded paper sheets at the designated collection point, and reserve the front assembly area for arranging and reading aloud.",
+                        highlightRange: [8, 10]
+                    }
+                ]
+            },
+            {
+                badge: "Stage 1",
+                title: "Pop, Read & Remember",
+                subtitle: "Steps 6–8: Pair up, pop virtual balloons, and memorize the words.",
+                proctorNote: "Partners must stand side by side holding arms together. No writing is allowed yet—students rely on memory!",
+                steps: [
+                    {
+                        num: "6",
+                        title: "Pair Up & Link Arms",
+                        desc: "Students form pairs, stand side by side holding arms together as instructed by the proctor, and share the ping-pong ball.",
+                        highlightRange: [0, 3.5]
+                    },
+                    {
+                        num: "7",
+                        title: "Play 'Pop the Balloon'",
+                        desc: "Using the mobile phone, students pop virtual balloons until the hidden words or sentence fragments appear. (Try clicking the balloons on screen!)",
+                        highlightRange: [3.5, 9.5]
+                    },
+                    {
+                        num: "8",
+                        title: "Memorize Words & Order",
+                        desc: "Both partners study and remember all revealed words and their exact order before moving to the relay.",
+                        highlightRange: [9.5, 14]
+                    }
+                ]
+            },
+            {
+                badge: "Stage 2",
+                title: "Teamwork Relay",
+                subtitle: "Steps 9–12: Reach the boundary line and exchange items without crossing.",
+                proctorNote: "Remind students not to run, push, pull, or force their partners. Crossing the masking tape line is a rule violation!",
+                steps: [
+                    {
+                        num: "9",
+                        title: "Move to Cup-and-Pen Station",
+                        desc: "On the proctor's signal, the arm-linked pair walks smoothly together toward the designated cup-and-pen station.",
+                        highlightRange: [0, 4.5]
+                    },
+                    {
+                        num: "10",
+                        title: "Respect the Boundary Line",
+                        desc: "The pen is inside a cup beyond the masking tape line. Students MUST NOT cross the line—they lean and cooperate using the proctor's permitted method.",
+                        highlightRange: [4.5, 9.5]
+                    },
+                    {
+                        num: "11",
+                        title: "Exchange Pen & Ping-Pong Ball",
+                        desc: "Coordinating their balance together, the pair retrieves the pen from the cup and places the ping-pong ball inside the cup.",
+                        highlightRange: [9.5, 12]
+                    },
+                    {
+                        num: "12",
+                        title: "Proceed to Stage 3",
+                        desc: "Once the item exchange is complete without crossing the tape, the pair moves together to the paper-collection point.",
+                        highlightRange: [12, 14]
+                    }
+                ]
+            },
+            {
+                badge: "Stage 3",
+                title: "Write, Arrange & Present",
+                subtitle: "Steps 13–19: Unfold paper, write from memory, pass relay, and read aloud.",
+                proctorNote: "Each pair takes a turn reading its part of the completed paragraph clearly in the correct order.",
+                steps: [
+                    {
+                        num: "13-14",
+                        title: "Collect & Unfold Paper Together",
+                        desc: "Maintaining their arm-linked position, the pair picks up one folded sheet of paper and uses their free hands together to unfold it.",
+                        highlightRange: [0, 4.5]
+                    },
+                    {
+                        num: "15",
+                        title: "Write Remembered Words",
+                        desc: "One student writes the memorized words in the correct order while both partners check spelling and sentence structure.",
+                        highlightRange: [4.5, 8.5]
+                    },
+                    {
+                        num: "16",
+                        title: "Return Pen & Pass Ball to Next Pair",
+                        desc: "The pair returns the pen to its cup, retrieves/exchanges the ping-pong ball as instructed, and passes the ball to the next pair.",
+                        highlightRange: [8.5, 11.5]
+                    },
+                    {
+                        num: "17-19",
+                        title: "Arrange Paragraph & Read Aloud",
+                        desc: "Pairs bring papers to the front, arrange all sentences into a meaningful paragraph, and read aloud in order to Mr. Jose Cer Gapay Bundalian.",
+                        highlightRange: [11.5, 16]
+                    }
+                ]
+            },
+            {
+                badge: "Judging & Safety",
+                title: "10-Point Scoring & Safety Rules",
+                subtitle: "Official evaluation rubric and safety guidelines for a fair activity.",
+                proctorNote: "Keep the floor clear of bags and chairs, use clean dry paper, and encourage every student to participate respectfully.",
+                steps: [
+                    {
+                        num: "5 pts",
+                        title: "Correct Word Order & Sentence Structure",
+                        desc: "Highest weight (5/10 pts): Words and sentences are arranged into a logical, grammatically correct paragraph.",
+                        highlightRange: [0, 3]
+                    },
+                    {
+                        num: "3 pts",
+                        title: "Spelling & Accuracy",
+                        desc: "3/10 pts: Words recalled from the balloon game are spelled accurately on the unfolded sheet.",
+                        highlightRange: [3, 6]
+                    },
+                    {
+                        num: "1 pt",
+                        title: "Teamwork & Cooperation",
+                        desc: "1/10 pts: Partners stay linked, communicate respectfully, and respect the boundary tape without pushing or running.",
+                        highlightRange: [6, 9]
+                    },
+                    {
+                        num: "1 pt",
+                        title: "Clear Reading & Presentation",
+                        desc: "1/10 pts: Every pair confidently reads their sentence part aloud in sequence.",
+                        highlightRange: [9, 12]
+                    }
+                ]
+            }
+        ];
+
+        // Resize Canvas cleanly for crisp Retina rendering
+        function resizeCanvas() {
+            const rect = wrapper.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        // UI Selection & Playback Functions
+        function selectStage(index) {
+            currentStage = index;
+            stageTime = 0;
+            if (index === 1) {
+                initBalloons();
+            }
+            updateUI();
+        }
+
+        function nextStage() {
+            selectStage((currentStage + 1) % stageData.length);
+        }
+
+        function prevStage() {
+            selectStage((currentStage - 1 + stageData.length) % stageData.length);
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            document.getElementById('play-icon').textContent = isPlaying ? '⏸️' : '▶️';
+            document.getElementById('play-text').textContent = isPlaying ? 'Pause' : 'Play';
+        }
+
+        function toggleSpeed() {
+            speedMultiplier = speedMultiplier === 1 ? 1.5 : 1;
+            document.getElementById('speed-btn').textContent = `Speed: ${speedMultiplier}x`;
+        }
+
+        function restartCurrentStage() {
+            stageTime = 0;
+            if (currentStage === 1) initBalloons();
+            if (!isPlaying) togglePlay();
+        }
+
+        function scrubTimeline(e) {
+            const bar = document.getElementById('timeline-bar');
+            const rect = bar.getBoundingClientRect();
+            const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+            stageTime = ratio * stageDurations[currentStage];
+            if (currentStage === 1) {
+                // Sync balloon state to scrubbed time
+                const popProgress = Math.max(0, (stageTime - 3.2) / 5.5);
+                const countToPop = Math.floor(popProgress * balloons.length);
+                balloons.forEach((b, i) => {
+                    b.popped = i < countToPop;
+                    b.popAnim = b.popped ? 1 : 0;
+                });
+            }
+        }
+
+        function updateUI() {
+            // Update Tabs
+            for (let i = 0; i < 5; i++) {
+                const tab = document.getElementById(`tab-${i}`);
+                if (i === currentStage) {
+                    tab.classList.add('stage-tab-active');
+                    tab.classList.remove('text-slate-600', 'hover:bg-slate-100');
+                } else {
+                    tab.classList.remove('stage-tab-active');
+                    tab.classList.add('text-slate-600', 'hover:bg-slate-100');
+                }
+            }
+
+            // Update Side Panel Header
+            const info = stageData[currentStage];
+            document.getElementById('panel-badge').textContent = info.badge;
+            document.getElementById('panel-step-counter').textContent = `${currentStage + 1} / 5`;
+            document.getElementById('panel-title').textContent = info.title;
+            document.getElementById('panel-subtitle').textContent = info.subtitle;
+            document.getElementById('proctor-note-text').textContent = info.proctorNote;
+
+            // Balloon interactive banner visibility
+            const balloonBanner = document.getElementById('balloon-mode-banner');
+            if (currentStage === 1) {
+                balloonBanner.classList.remove('hidden');
+            } else {
+                balloonBanner.classList.add('hidden');
+            }
+
+            // Render step cards
+            const container = document.getElementById('panel-content');
+            container.innerHTML = info.steps.map((step, idx) => `
+                <div id="step-card-${idx}" class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50/70 transition-all duration-200">
+                    <div class="flex items-start gap-3">
+                        <span class="shrink-0 px-2.5 py-1 rounded-xl bg-blue-600 text-white font-display font-bold text-xs shadow-sm">
+                            ${step.num}
+                        </span>
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-800">${step.title}</h3>
+                            <p class="text-xs text-slate-600 mt-1 leading-relaxed">${step.desc}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function highlightActiveStepCard() {
+            const info = stageData[currentStage];
+            info.steps.forEach((step, idx) => {
+                const card = document.getElementById(`step-card-${idx}`);
+                if (!card) return;
+                const isActive = stageTime >= step.highlightRange[0] && stageTime <= step.highlightRange[1];
+                if (isActive) {
+                    card.classList.remove('border-slate-200', 'bg-slate-50/70');
+                    card.classList.add('border-blue-500', 'bg-blue-50/90', 'shadow-sm', 'ring-2', 'ring-blue-500/20');
+                } else {
+                    card.classList.add('border-slate-200', 'bg-slate-50/70');
+                    card.classList.remove('border-blue-500', 'bg-blue-50/90', 'shadow-sm', 'ring-2', 'ring-blue-500/20');
+                }
+            });
+        }
+
+        // Interactive Click/Tap on Canvas for Stage 1 Balloons
+        canvas.addEventListener('pointerdown', (e) => {
+            if (currentStage !== 1) return;
+            const rect = canvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+
+            let hitAny = false;
+            balloons.forEach(b => {
+                if (!b.popped && b.screenBounds) {
+                    const dx = clickX - b.screenBounds.x;
+                    const dy = clickY - b.screenBounds.y;
+                    if (Math.hypot(dx, dy) <= b.screenBounds.r + 8) {
+                        b.popped = true;
+                        b.popAnim = 0.01;
+                        hitAny = true;
+                        interactiveBalloonUsed = true;
+                    }
+                }
+            });
+
+            if (hitAny) {
+                const poppedCount = balloons.filter(b => b.popped).length;
+                const promptEl = document.getElementById('balloon-prompt-text');
+                if (poppedCount === balloons.length) {
+                    promptEl.textContent = "All words revealed! Memorize: \"Teamwork helps us succeed together.\"";
+                } else {
+                    promptEl.textContent = `Popped ${poppedCount}/${balloons.length}! Keep popping balloons...`;
+                }
+            }
+        });
+
+        // ==========================================
+        // VECTOR DRAWING HELPERS
+        // ==========================================
+
+        function drawRoundedRect(x, y, w, h, r, fill, stroke, lineWidth = 2) {
+            ctx.beginPath();
+            ctx.roundRect(x, y, w, h, r);
+            if (fill) {
+                ctx.fillStyle = fill;
+                ctx.fill();
+            }
+            if (stroke) {
+                ctx.strokeStyle = stroke;
+                ctx.lineWidth = lineWidth;
+                ctx.stroke();
+            }
+        }
+
+        function drawFloorGrid(w, h) {
+            ctx.fillStyle = '#f8fafc';
+            ctx.fillRect(0, 0, w, h);
+
+            // Subtle classroom tile grid
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1;
+            const step = 36;
+            for (let x = 0; x < w; x += step) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, h);
+                ctx.stroke();
+            }
+            for (let y = 0; y < h; y += step) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
+            }
+        }
+
+        function drawZoneBox(x, y, w, h, label, sublabel, bgColor, borderColor, textColor) {
+            drawRoundedRect(x, y, w, h, 14, bgColor, borderColor, 2);
+            ctx.fillStyle = textColor;
+            ctx.font = '700 12px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(label, x + w / 2, y + 20);
+            if (sublabel) {
+                ctx.font = '500 10px Inter, sans-serif';
+                ctx.globalAlpha = 0.85;
+                ctx.fillText(sublabel, x + w / 2, y + 34);
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        function drawBoundaryTape(x, y1, y2, warningPulse = false) {
+            // Yellow & Black hazard/masking tape strip
+            const tapeW = 14;
+            ctx.save();
+            ctx.fillStyle = warningPulse ? '#fde047' : '#facc15';
+            ctx.fillRect(x - tapeW / 2, y1, tapeW, y2 - y1);
+
+            ctx.strokeStyle = '#ca8a04';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(x - tapeW / 2, y1, tapeW, y2 - y1);
+
+            // Diagonal stripes
+            ctx.beginPath();
+            ctx.rect(x - tapeW / 2, y1, tapeW, y2 - y1);
+            ctx.clip();
+            ctx.strokeStyle = 'rgba(30, 41, 59, 0.28)';
+            ctx.lineWidth = 4;
+            for (let yy = y1 - 20; yy < y2 + 20; yy += 16) {
+                ctx.beginPath();
+                ctx.moveTo(x - 12, yy);
+                ctx.lineTo(x + 12, yy + 12);
+                ctx.stroke();
+            }
+            ctx.restore();
+
+            // Label badge
+            ctx.save();
+            ctx.translate(x, (y1 + y2) / 2);
+            ctx.rotate(-Math.PI / 2);
+            drawRoundedRect(-64, -24, 128, 18, 6, '#dc2626', '#ffffff', 1.5);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '800 9px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('MASKING TAPE: DO NOT CROSS', 0, -12);
+            ctx.restore();
+        }
+
+        function drawCupAndPen(x, y, hasPen = true, hasBall = false) {
+            // Cup (top-down / isometric perspective)
+            ctx.beginPath();
+            ctx.arc(x, y, 16, 0, Math.PI * 2);
+            ctx.fillStyle = '#e0f2fe';
+            ctx.fill();
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = '#0284c7';
+            ctx.stroke();
+
+            // Inner cup shadow
+            ctx.beginPath();
+            ctx.arc(x, y, 11, 0, Math.PI * 2);
+            ctx.fillStyle = '#bae6fd';
+            ctx.fill();
+
+            // Ping-pong ball inside cup
+            if (hasBall) {
+                ctx.beginPath();
+                ctx.arc(x - 2, y + 2, 6.5, 0, Math.PI * 2);
+                ctx.fillStyle = '#fb923c';
+                ctx.fill();
+                ctx.strokeStyle = '#c2410c';
+                ctx.lineWidth = 1.2;
+                ctx.stroke();
+                // Highlight dot
+                ctx.beginPath();
+                ctx.arc(x - 4, y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = '#ffedd5';
+                ctx.fill();
+            }
+
+            // Pen sticking out of cup
+            if (hasPen) {
+                ctx.save();
+                ctx.translate(x + 3, y - 3);
+                ctx.rotate(-Math.PI / 4);
+                drawRoundedRect(-2.5, -18, 5, 22, 2, '#1e3a8a', '#ffffff', 1);
+                // Pen tip
+                ctx.beginPath();
+                ctx.moveTo(-2.5, 4);
+                ctx.lineTo(2.5, 4);
+                ctx.lineTo(0, 9);
+                ctx.closePath();
+                ctx.fillStyle = '#94a3b8';
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function drawPhoneProp(x, y, scale = 1) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(scale, scale);
+            drawRoundedRect(-11, -18, 22, 36, 4, '#1e293b', '#64748b', 1.5);
+            drawRoundedRect(-8.5, -13, 17, 26, 2, '#38bdf8', null);
+            // Tiny balloon dots
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath(); ctx.arc(-3, -4, 3, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#facc15';
+            ctx.beginPath(); ctx.arc(3, 3, 3, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+        }
+
+        function drawFoldedPaper(x, y, unfolded = false, text = "") {
+            ctx.save();
+            ctx.translate(x, y);
+            if (!unfolded) {
+                drawRoundedRect(-12, -8, 24, 16, 2, '#ffffff', '#94a3b8', 1.5);
+                // Fold crease line
+                ctx.beginPath();
+                ctx.moveTo(0, -8);
+                ctx.lineTo(0, 8);
+                ctx.strokeStyle = '#cbd5e1';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            } else {
+                drawRoundedRect(-26, -18, 52, 36, 3, '#ffffff', '#3b82f6', 1.5);
+                // Crease lines
+                ctx.strokeStyle = '#e2e8f0';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(0, -18); ctx.lineTo(0, 18);
+                ctx.moveTo(-26, 0); ctx.lineTo(26, 0);
+                ctx.stroke();
+                if (text) {
+                    ctx.fillStyle = '#1e3a8a';
+                    ctx.font = '700 7.5px Inter, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(text, 0, 3);
+                }
+            }
+            ctx.restore();
+        }
+
+        /**
+         * Draws a pair of students linked arm-in-arm
+         */
+        function drawLinkedPair(x, y, opts = {}) {
+            const {
+                angle = 0,
+                leanAmount = 0, // 0 to 1 for reaching over boundary
+                hasBall = false,
+                hasPen = false,
+                hasPaper = false,
+                unfoldedPaper = false,
+                paperText = "",
+                colorA = '#2563eb',
+                colorB = '#0d9488',
+                label = "Pair 1",
+                walkPhase = 0
+            } = opts;
+
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+
+            const bobA = Math.sin(walkPhase) * 2.5;
+            const bobB = Math.sin(walkPhase + Math.PI) * 2.5;
+            const reachOffset = leanAmount * 26;
+
+            // Linked Arms Bridge (Center connection)
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 6;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(0, -12 + bobA);
+            ctx.lineTo(reachOffset * 0.4, 12 + bobB);
+            ctx.stroke();
+
+            // Link badge indicator
+            ctx.beginPath();
+            ctx.arc(reachOffset * 0.2, 0, 5, 0, Math.PI * 2);
+            ctx.fillStyle = '#fbbf24';
+            ctx.fill();
+            ctx.strokeStyle = '#b45309';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Student A (Top/Left partner - reaches forward when leaning)
+            const ax = reachOffset;
+            const ay = -16 + bobA;
+            // Reaching arm
+            if (leanAmount > 0.1 || hasBall || hasPen) {
+                ctx.strokeStyle = colorA;
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.moveTo(ax, ay);
+                ctx.lineTo(ax + 18 + leanAmount * 14, ay + 4);
+                ctx.stroke();
+            }
+            // Body
+            ctx.beginPath();
+            ctx.arc(ax, ay, 13, 0, Math.PI * 2);
+            ctx.fillStyle = colorA;
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            // Head
+            ctx.beginPath();
+            ctx.arc(ax + 3, ay, 7.5, 0, Math.PI * 2);
+            ctx.fillStyle = '#fde68a';
+            ctx.fill();
+
+            // Student B (Bottom/Right partner - anchors balance during lean)
+            const bx = -leanAmount * 8;
+            const by = 16 + bobB;
+            ctx.beginPath();
+            ctx.arc(bx, by, 13, 0, Math.PI * 2);
+            ctx.fillStyle = colorB;
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            // Head
+            ctx.beginPath();
+            ctx.arc(bx + 3, by, 7.5, 0, Math.PI * 2);
+            ctx.fillStyle = '#fcd34d';
+            ctx.fill();
+
+            // Held Props in extended hand
+            const handX = ax + 20 + leanAmount * 14;
+            const handY = ay + 4;
+
+            if (hasBall) {
+                ctx.beginPath();
+                ctx.arc(handX, handY, 6, 0, Math.PI * 2);
+                ctx.fillStyle = '#fb923c';
+                ctx.fill();
+                ctx.strokeStyle = '#9a3412';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            }
+
+            if (hasPen) {
+                ctx.save();
+                ctx.translate(handX, handY - 5);
+                ctx.rotate(0.3);
+                drawRoundedRect(-2, -10, 4, 18, 1.5, '#1e3a8a', '#ffffff', 1);
+                ctx.restore();
+            }
+
+            if (hasPaper) {
+                drawFoldedPaper(handX + 12, by - 12, unfoldedPaper, paperText);
+            }
+
+            ctx.restore();
+
+            // Floating Pair Label
+            if (label) {
+                ctx.save();
+                ctx.font = '700 10px Inter, sans-serif';
+                const tw = ctx.measureText(label).width + 12;
+                drawRoundedRect(x - tw / 2, y - 44, tw, 16, 8, 'rgba(15, 23, 42, 0.85)', null);
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.fillText(label, x, y - 33);
+                ctx.restore();
+            }
+        }
+
+        function drawProctor(x, y, label = "Proctor: Mr. Jose") {
+            ctx.save();
+            ctx.translate(x, y);
+            // Body
+            ctx.beginPath();
+            ctx.arc(0, 0, 15, 0, Math.PI * 2);
+            ctx.fillStyle = '#7c3aed';
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+            // Head
+            ctx.beginPath();
+            ctx.arc(-2, 0, 8.5, 0, Math.PI * 2);
+            ctx.fillStyle = '#fde68a';
+            ctx.fill();
+            // Clipboard
+            drawRoundedRect(-18, 6, 12, 16, 2, '#f59e0b', '#78350f', 1.2);
+            ctx.restore();
+
+            ctx.save();
+            ctx.font = '700 10px Inter, sans-serif';
+            const tw = ctx.measureText(label).width + 12;
+            drawRoundedRect(x - tw / 2, y - 32, tw, 16, 8, '#5b21b6', null);
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.fillText(label, x, y - 21);
+            ctx.restore();
+        }
+
+        // ==========================================
+        // STAGE RENDERERS
+        // ==========================================
+
+        function renderStage0Overview(w, h, t) {
+            drawFloorGrid(w, h);
+            document.getElementById('canvas-status-label').textContent = "Overview: Classroom Arena & 6-Station Setup";
+
+            const pad = Math.min(24, w * 0.03);
+            const col1W = w * 0.24;
+            const tapeX = w * 0.44;
+            const cupX = w * 0.54;
+            const paperX = w * 0.67;
+            const stageX = w * 0.83;
+
+            // 1. Start Zone (Left)
+            const hlStart = t < 6;
+            drawZoneBox(
+                pad, pad + 18, col1W, h - pad * 2 - 26,
+                "START ZONE", "6 Mobile Phones (Balloon Game)",
+                hlStart ? '#eff6ff' : '#f1f5f9',
+                hlStart ? '#2563eb' : '#cbd5e1',
+                '#1e3a8a'
+            );
+
+            // Draw 3 sample phone stations in Start Zone
+            for (let i = 0; i < 3; i++) {
+                const sy = pad + 75 + i * ((h - pad * 2 - 110) / 2);
+                drawPhoneProp(pad + col1W * 0.72, sy, 0.95);
+                drawLinkedPair(pad + col1W * 0.34, sy, {
+                    label: `Pair ${i + 1}`,
+                    hasBall: i === 0,
+                    colorA: i === 0 ? '#2563eb' : '#475569',
+                    colorB: i === 0 ? '#0d9488' : '#64748b'
+                });
+            }
+
+            // 2. Masking Tape Boundary Line
+            drawBoundaryTape(tapeX, pad + 18, h - pad - 8, t >= 6 && t < 8);
+
+            // 3. Cup & Pen Station (Beyond Tape)
+            const hlCup = t >= 6 && t < 8;
+            drawZoneBox(
+                cupX - 42, pad + 18, 84, h - pad * 2 - 26,
+                "STATION", "6 Cups & Pens",
+                hlCup ? '#fefce8' : '#f8fafc',
+                hlCup ? '#eab308' : '#cbd5e1',
+                '#854d0e'
+            );
+            for (let i = 0; i < 3; i++) {
+                const sy = pad + 75 + i * ((h - pad * 2 - 110) / 2);
+                drawCupAndPen(cupX, sy, true, false);
+            }
+
+            // 4. Paper Collection Point
+            const hlPaper = t >= 8;
+            drawZoneBox(
+                paperX - 46, pad + 18, 92, h - pad * 2 - 26,
+                "PAPER POINT", "30 Folded Sheets",
+                hlPaper ? '#ecfdf5' : '#f8fafc',
+                hlPaper ? '#10b981' : '#cbd5e1',
+                '#065f46'
+            );
+            for (let i = 0; i < 4; i++) {
+                drawFoldedPaper(paperX + (i % 2 === 0 ? -8 : 8), pad + 85 + i * 52, false);
+            }
+
+            // 5. Front Presentation Area
+            drawZoneBox(
+                stageX - 55, pad + 18, 110, h - pad * 2 - 26,
+                "FRONT AREA", "Arrange & Read Aloud",
+                hlPaper ? '#f5f3ff' : '#f8fafc',
+                hlPaper ? '#8b5cf6' : '#cbd5e1',
+                '#5b21b6'
+            );
+            drawProctor(stageX, h * 0.5, "Proctor");
+
+            // Animated dashed route arrows showing flow
+            ctx.save();
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 2.5;
+            ctx.setLineDash([6, 6]);
+            ctx.lineDashOffset = -t * 28;
+            const routeY = h * 0.25;
+            ctx.beginPath();
+            ctx.moveTo(pad + col1W + 6, routeY);
+            ctx.lineTo(tapeX - 18, routeY);
+            ctx.lineTo(paperX, routeY + 45);
+            ctx.lineTo(stageX - 25, routeY + 45);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function renderStage1PopAndRemember(w, h, t) {
+            drawFloorGrid(w, h);
+            document.getElementById('canvas-status-label').textContent = "Stage 1: Pop Balloons on Phone & Memorize Words";
+
+            // Left side: Arm-linked pair at Start Zone
+            const leftCenterX = w * 0.25;
+            const centerY = h * 0.56;
+
+            drawZoneBox(20, 62, w * 0.42, h - 82, "STAGE 1: START ZONE", "Hold arms together • No writing allowed", "#eff6ff", "#93c5fd", "#1e40af");
+
+            drawLinkedPair(leftCenterX - 20, centerY, {
+                hasBall: true,
+                label: "Linked Pair (Arm-in-Arm)",
+                walkPhase: t * 2
+            });
+
+            // Speech bubble showing memory phase
+            if (t >= 8.5) {
+                const bubbleW = Math.min(230, w * 0.38);
+                drawRoundedRect(leftCenterX - bubbleW / 2, centerY - 125, bubbleW, 64, 14, '#ffffff', '#2563eb', 2.5);
+                ctx.fillStyle = '#1e3a8a';
+                ctx.font = '700 11px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText("🧠 Memorizing Order:", leftCenterX, centerY - 104);
+                ctx.fillStyle = '#0f172a';
+                ctx.font = '800 11px Inter, sans-serif';
+                ctx.fillText('"Teamwork helps us succeed together."', leftCenterX, centerY - 82);
+            }
+
+            // Right side: Zoomed-in Interactive Mobile Phone Screen
+            const phoneW = Math.min(260, w * 0.44);
+            const phoneH = Math.min(350, h - 84);
+            const phoneX = w * 0.72 - phoneW / 2;
+            const phoneY = 64 + (h - 84 - phoneH) / 2;
+
+            // Phone Chassis
+            drawRoundedRect(phoneX, phoneY, phoneW, phoneH, 28, '#1e293b', '#475569', 4);
+            // Speaker notch
+            drawRoundedRect(phoneX + phoneW / 2 - 26, phoneY + 10, 52, 6, 3, '#334155', null);
+
+            // Screen Area
+            const scrX = phoneX + 12;
+            const scrY = phoneY + 24;
+            const scrW = phoneW - 24;
+            const scrH = phoneH - 42;
+            drawRoundedRect(scrX, scrY, scrW, scrH, 18, '#e0f2fe', '#0284c7', 1.5);
+
+            // App Header inside phone
+            ctx.fillStyle = '#0369a1';
+            ctx.font = '800 12px Fredoka, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('🎈 POP THE BALLOON', scrX + scrW / 2, scrY + 22);
+
+            // Auto-pop progression if user hasn't manually clicked
+            if (!interactiveBalloonUsed && isPlaying) {
+                const autoPopCount = Math.floor(Math.max(0, (t - 2.8) / 1.1));
+                balloons.forEach((b, idx) => {
+                    if (idx < autoPopCount && !b.popped) {
+                        b.popped = true;
+                        b.popAnim = 0.01;
+                    }
+                });
+            }
+
+            // Draw Balloons / Revealed Words inside Phone Screen
+            balloons.forEach((b, idx) => {
+                const bx = scrX + b.rx * scrW;
+                const by = scrY + 28 + b.ry * (scrH - 72) + Math.sin(t * 3 + b.bobOffset) * 3;
+                const radius = Math.min(28, scrW * 0.135);
+                b.screenBounds = { x: bx, y: by, r: radius };
+
+                if (!b.popped) {
+                    // Balloon string
+                    ctx.beginPath();
+                    ctx.moveTo(bx, by + radius);
+                    ctx.quadraticCurveTo(bx + 4, by + radius + 10, bx - 2, by + radius + 18);
+                    ctx.strokeStyle = '#64748b';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+
+                    // Balloon body
+                    ctx.beginPath();
+                    ctx.ellipse(bx, by, radius * 0.88, radius, 0, 0, Math.PI * 2);
+                    ctx.fillStyle = b.color;
+                    ctx.fill();
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    // Shine reflection
+                    ctx.beginPath();
+                    ctx.ellipse(bx - radius * 0.3, by - radius * 0.3, radius * 0.2, radius * 0.35, -0.4, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+                    ctx.fill();
+
+                    // Order hint number
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '800 13px Fredoka, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(`#${idx + 1}`, bx, by + 5);
+                } else {
+                    // Popped state: Show revealed word pill!
+                    const pillW = Math.max(66, ctx.measureText(b.word).width + 20);
+                    drawRoundedRect(bx - pillW / 2, by - 14, pillW, 28, 10, '#ffffff', b.color, 2.5);
+                    ctx.fillStyle = '#0f172a';
+                    ctx.font = '800 12px Inter, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(b.word, bx, by + 4);
+                }
+            });
+
+            // Bottom Sentence Tray inside Phone
+            const trayY = scrY + scrH - 36;
+            drawRoundedRect(scrX + 8, trayY, scrW - 16, 28, 8, '#ffffff', '#bae6fd', 1.5);
+            const revealedSentence = balloons.map(b => b.popped ? b.word : '___').join(' ');
+            ctx.fillStyle = '#1e3a8a';
+            ctx.font = '700 10px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(revealedSentence, scrX + scrW / 2, trayY + 17);
+        }
+
+        function renderStage2TeamworkRelay(w, h, t) {
+            drawFloorGrid(w, h);
+            document.getElementById('canvas-status-label').textContent = "Stage 2: Teamwork Relay & Boundary Exchange";
+
+            const startX = w * 0.14;
+            const tapeX = w * 0.56;
+            const cupX = tapeX + 46;
+            const paperX = w * 0.85;
+            const laneY = h * 0.54;
+
+            // Zones
+            drawZoneBox(16, 24, w * 0.22, h - 48, "START", "On Proctor Signal", "#f1f5f9", "#cbd5e1", "#475569");
+            drawZoneBox(paperX - 48, 24, 96, h - 48, "STAGE 3", "Paper Point", "#ecfdf5", "#6ee7b7", "#065f46");
+
+            // Masking Tape Boundary Line
+            const isAtBoundary = t >= 4.2 && t <= 11.8;
+            drawBoundaryTape(tapeX, 24, h - 24, isAtBoundary);
+
+            // Cup & Pen State based on timeline
+            // t < 9.5: pen in cup, no ball
+            // t >= 9.5: pen retrieved by pair, ping-pong ball placed in cup!
+            const exchanged = t >= 9.5;
+            drawCupAndPen(cupX, laneY - 12, !exchanged, exchanged);
+
+            // Label next to cup
+            ctx.fillStyle = '#0369a1';
+            ctx.font = '700 11px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(exchanged ? "Ball in Cup! ✓" : "Pen in Cup", cupX, laneY + 24);
+
+            // Pair Position & Lean Kinematics
+            let pairX = startX;
+            let pairY = laneY;
+            let lean = 0;
+            let walkPhase = 0;
+
+            if (t < 4.5) {
+                // Walking from Start to Boundary Line
+                const p = t / 4.5;
+                pairX = startX + (tapeX - 36 - startX) * p;
+                walkPhase = t * 9;
+            } else if (t < 11.8) {
+                // Stopped safely behind tape, leaning & coordinating exchange
+                pairX = tapeX - 36;
+                const leanCycle = Math.sin(((t - 4.5) / 7.3) * Math.PI);
+                lean = Math.max(0, leanCycle);
+            } else {
+                // Moving to Stage 3 Paper Collection Point (staying behind/around boundary route)
+                const p = (t - 11.8) / 2.2;
+                pairX = (tapeX - 36) + (paperX - 75 - (tapeX - 36)) * p;
+                pairY = laneY + Math.sin(p * Math.PI) * 55;
+                walkPhase = t * 9;
+            }
+
+            drawLinkedPair(pairX, pairY, {
+                leanAmount: lean,
+                hasBall: !exchanged,
+                hasPen: exchanged,
+                label: isAtBoundary ? "Cooperating Behind Line!" : "Linked Pair",
+                walkPhase: walkPhase
+            });
+
+            // Visual Callout during exchange
+            if (isAtBoundary) {
+                const boxW = Math.min(270, w * 0.45);
+                drawRoundedRect(tapeX - boxW - 22, 34, boxW, 56, 12, '#fef2f2', '#ef4444', 2);
+                ctx.fillStyle = '#b91c1c';
+                ctx.font = '800 11px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText("⚠️ FEET STAY BEHIND MASKING TAPE", tapeX - boxW / 2 - 22, 55);
+                ctx.fillStyle = '#7f1d1d';
+                ctx.font = '600 10px Inter, sans-serif';
+                ctx.fillText("Retrieve pen & place ping-pong ball in cup", tapeX - boxW / 2 - 22, 73);
+            }
+        }
+
+        function renderStage3WriteAndPresent(w, h, t) {
+            drawFloorGrid(w, h);
+            document.getElementById('canvas-status-label').textContent = "Stage 3: Unfold, Write, Pass Relay & Present";
+
+            const paperZoneX = w * 0.22;
+            const cupZoneX = w * 0.48;
+            const frontZoneX = w * 0.78;
+            const centerY = h * 0.55;
+
+            // Zones
+            drawZoneBox(20, 24, w * 0.34, h - 48, "PAPER COLLECTION & WRITING", "Pick up, unfold & write from memory", "#ecfdf5", "#6ee7b7", "#065f46");
+            drawZoneBox(cupZoneX - 52, 24, 104, h - 48, "EXCHANGE", "Return Pen / Pass Ball", "#fefce8", "#fde047", "#854d0e");
+            drawZoneBox(w * 0.62, 24, w * 0.35, h - 48, "FRONT PRESENTATION AREA", "Arrange Paragraph & Read Aloud", "#f5f3ff", "#c4b5fd", "#5b21b6");
+
+            // Draw Proctor at Front Presentation Area
+            drawProctor(w * 0.89, centerY, "Mr. Jose (Proctor)");
+
+            // Cup state for returning pen & passing ball
+            const penReturned = t >= 9.5;
+            drawCupAndPen(cupZoneX, centerY - 25, penReturned, !penReturned);
+
+            // Waiting Next Pair (Pair 2) ready to receive ball
+            drawLinkedPair(cupZoneX - 10, centerY + 75, {
+                hasBall: t >= 10.5,
+                colorA: '#db2777',
+                colorB: '#ea580c',
+                label: t >= 10.5 ? "Pair 2 (Next Turn!)" : "Pair 2 Waiting"
+            });
+
+            // Active Pair 1 animation across sub-steps
+            if (t < 8.5) {
+                // Sub-step 13-15: Pick up, unfold, and write remembered words
+                const unfolded = t >= 2.2;
+                const typedLen = Math.floor(Math.max(0, (t - 4.2) / 4.0) * 34);
+                const fullSentence = "Teamwork helps us succeed together.";
+                const currentText = fullSentence.slice(0, typedLen);
+
+                // Remaining folded sheets on floor
+                drawFoldedPaper(paperZoneX - 45, centerY + 55, false);
+                drawFoldedPaper(paperZoneX - 25, centerY + 65, false);
+
+                drawLinkedPair(paperZoneX, centerY - 10, {
+                    hasPen: true,
+                    hasPaper: true,
+                    unfoldedPaper: unfolded,
+                    paperText: currentText,
+                    label: unfolded ? "Writing Remembered Words..." : "Unfolding Paper Together"
+                });
+
+                // Zoomed Paper Preview Card at top-left
+                if (unfolded) {
+                    const cardW = Math.min(230, w * 0.31);
+                    drawRoundedRect(30, 68, cardW, 54, 10, '#ffffff', '#10b981', 2);
+                    ctx.fillStyle = '#047857';
+                    ctx.font = '700 10px Inter, sans-serif';
+                    ctx.textAlign = 'left';
+                    ctx.fillText("✍️ Unfolded Sheet:", 42, 86);
+                    ctx.fillStyle = '#0f172a';
+                    ctx.font = '800 11px Inter, sans-serif';
+                    ctx.fillText(currentText + (t < 8.2 ? "|" : ""), 42, 106);
+                }
+            } else if (t < 11.5) {
+                // Sub-step 16: Return pen to cup & pass ping-pong ball to Pair 2
+                drawLinkedPair(cupZoneX - 36, centerY - 10, {
+                    hasPen: !penReturned,
+                    hasBall: t >= 9.5 && t < 10.5,
+                    hasPaper: true,
+                    unfoldedPaper: true,
+                    paperText: "Teamwork helps...",
+                    label: "Returning Pen & Passing Ball"
+                });
+            } else {
+                // Sub-step 17-19: Bring paper forward, arrange paragraph & read aloud!
+                drawLinkedPair(frontZoneX - 42, centerY - 35, {
+                    hasPaper: true,
+                    unfoldedPaper: true,
+                    paperText: "1. Teamwork helps...",
+                    label: "Pair 1 Reading Aloud!"
+                });
+
+                // Second pair that already finished arranging sentence 2
+                drawLinkedPair(frontZoneX - 42, centerY + 55, {
+                    hasPaper: true,
+                    unfoldedPaper: true,
+                    paperText: "2. Every voice matters.",
+                    colorA: '#0284c7',
+                    colorB: '#4f46e5',
+                    label: "Pair 3"
+                });
+
+                // Speech bubble showing group reading aloud
+                const speechW = Math.min(220, w * 0.32);
+                drawRoundedRect(frontZoneX - speechW / 2 - 20, 68, speechW, 56, 12, '#ffffff', '#7c3aed', 2);
+                ctx.fillStyle = '#5b21b6';
+                ctx.font = '800 10px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText("🗣️ Reading Completed Paragraph:", frontZoneX - 20, 87);
+                ctx.fillStyle = '#1e293b';
+                ctx.font = '700 10px Inter, sans-serif';
+                ctx.fillText('"Teamwork helps us succeed together."', frontZoneX - 20, 107);
+            }
+        }
+
+        function renderStage4ScoringAndRules(w, h, t) {
+            drawFloorGrid(w, h);
+            document.getElementById('canvas-status-label').textContent = "Judging Rubric (10 Points) & Safety Reminders";
+
+            const pad = 22;
+            const topH = h * 0.52;
+
+            // Top Card: 10-Point Judging Rubric Visual Bars
+            drawRoundedRect(pad, pad, w - pad * 2, topH - pad, 18, '#ffffff', '#cbd5e1', 2);
+            ctx.fillStyle = '#1e3a8a';
+            ctx.font = '800 15px Fredoka, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText("🏆 OFFICIAL JUDGING CRITERIA (TOTAL: 10 POINTS)", pad + 18, pad + 28);
+
+            const criteria = [
+                { label: "Correct Word Order & Sentence Structure", pts: 5, color: "#2563eb" },
+                { label: "Spelling & Accuracy", pts: 3, color: "#0d9488" },
+                { label: "Teamwork & Cooperation", pts: 1, color: "#f59e0b" },
+                { label: "Clear Reading & Presentation", pts: 1, color: "#8b5cf6" }
+            ];
+
+            const barMaxW = w - pad * 2 - 230;
+            criteria.forEach((c, idx) => {
+                const rowY = pad + 52 + idx * ((topH - pad - 65) / 4);
+                const isHighlighted = Math.floor(t / 3) % 4 === idx;
+
+                ctx.fillStyle = isHighlighted ? '#0f172a' : '#475569';
+                ctx.font = isHighlighted ? '700 11.5px Inter, sans-serif' : '600 11px Inter, sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(c.label, pad + 18, rowY + 12);
+
+                // Bar track
+                const trackX = w - pad - barMaxW - 60;
+                drawRoundedRect(trackX, rowY, barMaxW, 16, 8, '#f1f5f9', null);
+
+                // Animated Bar Fill
+                const fillRatio = Math.min(1, t / 1.2) * (c.pts / 5);
+                drawRoundedRect(trackX, rowY, Math.max(16, barMaxW * fillRatio), 16, 8, c.color, null);
+
+                // Points Pill
+                ctx.fillStyle = c.color;
+                ctx.font = '800 12px Inter, sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText(`${c.pts} pt${c.pts > 1 ? 's' : ''}`, w - pad - 18, rowY + 13);
+            });
+
+            // Bottom Card: Safety & Proctor Reminders
+            const botY = topH + 8;
+            const botH = h - botY - pad;
+            drawRoundedRect(pad, botY, w - pad * 2, botH, 18, '#fffbeb', '#fcd34d', 2);
+            ctx.fillStyle = '#92400e';
+            ctx.font = '800 14px Fredoka, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText("🛡️ SAFETY & PROCTOR REMINDERS", pad + 18, botY + 26);
+
+            const reminders = [
+                "• Demonstrate the relay & pen-retrieval method before starting.",
+                "• Keep floor & walking routes clear of bags, chairs, and obstacles.",
+                "• Do NOT run, push, pull, or force partners to move.",
+                "• Use clean, dry paper; verify phones load the online game."
+            ];
+
+            ctx.fillStyle = '#78350f';
+            ctx.font = '600 11px Inter, sans-serif';
+            reminders.forEach((line, idx) => {
+                const ly = botY + 48 + idx * ((botH - 56) / 4);
+                ctx.fillText(line, pad + 18, ly);
+            });
+        }
+
+        // ==========================================
+        // MAIN ANIMATION LOOP
+        // ==========================================
+
+        function animate(now) {
+            const dt = (now - lastFrameTime) / 1000;
+            lastFrameTime = now;
+
+            if (isPlaying) {
+                stageTime += dt * speedMultiplier;
+                const maxDuration = stageDurations[currentStage];
+                if (stageTime >= maxDuration) {
+                    // Loop current stage smoothly unless user clicks Next
+                    stageTime = 0;
+                    if (currentStage === 1) {
+                        initBalloons();
+                        document.getElementById('balloon-prompt-text').textContent = "Interactive Mode: Click balloons on the phone!";
+                    }
+                }
+            }
+
+            // Update Timeline Bar & Active Step Card
+            const progressPct = (stageTime / stageDurations[currentStage]) * 100;
+            document.getElementById('timeline-fill').style.width = `${Math.min(100, progressPct)}%`;
+            highlightActiveStepCard();
+
+            // Render Active Stage Canvas
+            const rect = wrapper.getBoundingClientRect();
+            const w = rect.width;
+            const h = rect.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            if (currentStage === 0) renderStage0Overview(w, h, stageTime);
+            else if (currentStage === 1) renderStage1PopAndRemember(w, h, stageTime);
+            else if (currentStage === 2) renderStage2TeamworkRelay(w, h, stageTime);
+            else if (currentStage === 3) renderStage3WriteAndPresent(w, h, stageTime);
+            else if (currentStage === 4) renderStage4ScoringAndRules(w, h, stageTime);
+
+            requestAnimationFrame(animate);
+        }
+
+        // Initialize on load
+        window.onload = function () {
+            resizeCanvas();
+            initBalloons();
+            selectStage(0);
+            lastFrameTime = performance.now();
+            requestAnimationFrame(animate);
+        };
+    </script>
+</body>
+</html>
